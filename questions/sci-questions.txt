@@ -1,0 +1,2 @@
+Which of the following is the binary representation of 42?;101010;101100;111111;100000;0
+Which of the following metals is not an element?;Iron;Copper;Aluminum;Steel;3
