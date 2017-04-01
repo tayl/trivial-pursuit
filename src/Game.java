@@ -4,6 +4,9 @@ import java.util.*;
 /**
  * Created by Colton on 4/1/2017.
  */
+
+// I created this class to have a space for writing game functionality.
+// Any or all of this can be moved or deleted as you see fit.
 public class Game {
 
     private int numPlayers;
@@ -36,12 +39,13 @@ public class Game {
         // it's random?
         Collections.shuffle(turns);
 
-        // Dish out the shuffled turns
+        // Dish out the shuffled turn numbers
         for (int i = 0; i < numPlayers; i++)
             players[i].setTurnOrder(turns.get(i));
 
         // rearrange the players array to be in turn order instead
-        // of creation order
+        // of creation order. That way we can easily loop-through
+        // turn-based play.
         for (int i = 0; i < numPlayers; i++) {
 
             if (players[i].getTurnOrder() != i) {
@@ -69,8 +73,10 @@ public class Game {
 
         Game game = new Game(testPlayers);
 
-        for (Player player : testPlayers)
+        for (Player player : testPlayers) {
+
             System.out.println(player.getPlayerName() + " " + player.getTurnOrder());
 
+        }*
     }*/
 }
