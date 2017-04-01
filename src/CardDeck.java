@@ -6,7 +6,7 @@ import java.awt.*;
  * Created by Colton on 3/30/2017.
  */
 
-//TODO mark Cards as 'used' (or just remove them from their lists in the deck). Perhaps add a shuffle method.
+//TODO mark Cards as 'used' (or just remove them from their lists in the deck).
 
 
 public class CardDeck {
@@ -38,7 +38,9 @@ public class CardDeck {
     void readInQuestions(Category category, String fileName) throws IOException {
 
         Scanner in = new Scanner(new File(fileName));
-
+        
+        ArrayList<Card> temp = this.deck.get(category);
+        
         while (in.hasNext()) {
 
             Card card = new Card(category);
@@ -57,9 +59,11 @@ public class CardDeck {
             // in the Card's choices array;
             card.setCorrectAnsIndex(Integer.parseInt(line[5]));
 
-            this.deck.get(category).add(card);
+            temp.add(card);
 
         }
+        
+        Collections.shuffle(temp);
     }
 
     public Card drawRandomCard(Category category) {
