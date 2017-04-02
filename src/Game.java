@@ -50,7 +50,7 @@ public class Game {
         }
 
         for (int i = 0; i < 100; i++) {
-            Card card = game.cardDeck.drawRandomCard(Category.ENTERTAINMENT);
+            Card card = game.cardDeck.drawRandomCard(Category.randomCategory());
 
             if (card == null) {
                 System.out.println("All cards drawn from this category");
