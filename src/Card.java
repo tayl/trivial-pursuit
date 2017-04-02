@@ -9,7 +9,7 @@ public class Card {
     String[] choices;
     int correctAnsIndex;
 
-    public Card(Category category){
+    public Card(Category category) {
         this.category = category;
     }
 

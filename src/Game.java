@@ -1,5 +1,6 @@
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Colton on 4/1/2017.
@@ -60,7 +61,7 @@ public class Game {
 
     // this is just a test drive. I'm assuming we'll get player array from
     // the GUI class
-    /*public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         Player[] testPlayers = new Player[3];
 
@@ -77,6 +78,17 @@ public class Game {
 
             System.out.println(player.getPlayerName() + " " + player.getTurnOrder());
 
-        }*
-    }*/
+        }
+
+        for (int i = 0; i < 10; i++) {
+            Card card = game.cardDeck.drawRandomCard(Category.ENTERTAINMENT);
+
+            if(card == null) {
+                System.out.println("All cards drawn from this category");
+                continue;
+            }
+
+            System.out.println(card.getQuestion());
+        }
+    }
 }

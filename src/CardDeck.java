@@ -1,13 +1,12 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.awt.*;
+
 /**
  * Created by Colton on 3/30/2017.
  */
 
-//TODO mark Cards as 'used' (or just remove them from their lists in the deck).
-
+//TODO mark Cards as 'used' (or just remove them from their lists in the deck). ()
 
 public class CardDeck {
 
@@ -38,9 +37,14 @@ public class CardDeck {
     void readInQuestions(Category category, String fileName) throws IOException {
 
         Scanner in = new Scanner(new File(fileName));
-        
+
         ArrayList<Card> temp = this.deck.get(category);
-        
+
+        // added to allow setQuestions to be called without disturbing unfinished categories
+        if (temp.size() > 0) {
+            return;
+        }
+
         while (in.hasNext()) {
 
             Card card = new Card(category);
@@ -62,14 +66,27 @@ public class CardDeck {
             temp.add(card);
 
         }
-        
+
         Collections.shuffle(temp);
     }
 
-    public Card drawRandomCard(Category category) {
+    /**
+     * @param category The category from which the card is randomly drawn
+     * @return The card that was drawn, or null if the category is empty
+     */
+    public Card drawRandomCard(Category category) throws IOException {
 
         ArrayList<Card> temp = this.deck.get(category);
 
-        return temp.get((int)(Math.random() * temp.size()));
+        // once all cards have been randomly drawn, refill that category (and subsequently, any others that are empty)
+        if (temp.size() <= 0) {
+            setQuestions();
+        }
+
+        int randomCard = (int) (Math.random() * temp.size());
+
+        return temp.remove(randomCard);
+
+//        return temp.get((int)(Math.random() * temp.size()));
     }
 }
