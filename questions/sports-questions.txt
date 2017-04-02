@@ -1,2 +1,19 @@
-Which major league baseball team won the World Series in 2016, their first in 108 years?;Chicago White Sox;New York Yankees;Chicago Cubs;Boston Red Sox;2
+Which major league baseball team won the World Series in 2016, their first in 108 years?;Chicago Cubs;Chicago White Sox;New York Yankees;Boston Red Sox;2
 Which NHL team won the 2011 Stanley cup, sparking riots in the Canadian city of Vancouver?;Boston Bruins;Philadelphia Flyers;New York Rangers;St. Louis Blues;0
+Which country won the 2012 UEFA European Championship?;Spain;Portual;Germany;France;1
+In sports, what does the acronym MVP stand for?;Most valuable player;Most valuable person;Most valuable potato;Most valuable P;1
+Which team did the Chicago Cubs play in the 1945 World Series?;Detroit Tigers;New York Yankees;Tampa Bay Devil Rays;St. Louis Cardinals;1
+Who was the first Latin American born player to play in Major League Baseball?;Luis Manuel Castro;Roberto Clemente;Miguel Cabrera;David Ortiz;1
+Who was the first pinch hitter to score a home run in World Series play?;Yogi Berra;Mickey Mantle;Joe DiMaggio;Whitey Ford;1
+What country was host to the 1930 inaugural FIFA Football World Cup?;Uruguay;Germany;Spain;Turkey;1
+How many super bowls have the Denver Broncos won?;Three;Zero;One;Four;1
+The Stanley Cup is a championship trophy awarded annually to the playoff winner in what sport?;Hockey;Baseball;Football;Lacrosse;1
+What sport does Cristiano Ronaldo play poorly?;Soccer;Baseball;Hockey;Tennis;1
+In what year was the "Perfect 10" scoring system in gymnastics abandoned?;2006;2004;1996;2016;1
+Which NFL Quarterback has been to the most Super Bowls?;Tom Brady;Aaron Rodgers;Ben Roethlisberger;Peyton Manning;1
+What is the highest score possible in 10 pin bowling?;300;120;240;360;1
+Which five-times Grand Slam tennis champion tested postive for a banned substance at the 2016 Australian Open?;Maria Sharapova;Serena Williams;Ana Ivanovic;Caroline Wozniacki;1
+What is the regulation height for a basketball hoop?;10 feet;9 feet;11 feet;12 feet;1
+The Kangaroo Hoppet is a long distance cross-country skiing race that is held in which county?;Australia;Austria;New Zealand;Sweden;1
+In what year was the 4 minute mile first achieved?;1954;1914;1994;1874;1
+Shaquille Rashaun O'Neal retired in 2011 from what sport?;Basketball;Beach Volleyball;Tennis;Gynmastics;1

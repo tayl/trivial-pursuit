@@ -1,2 +1,16 @@
-The Betrayal of Images is;A sculpture of a pipe;A painting of a pipe;A novel;A sketch by Leonardo Da Vinci;1
-Which famous painter said "I don't do drugs, I am drugs."?;Pablo Picasso;Vincent Van Gogh;Jackson Pollock;Salvador Dali;3
+The Betrayal of Images is;A painting of a pipe;A sculpture of a pipe;A novel;A sketch by Leonardo Da Vinci;1
+Which famous painter said "I don't do drugs, I am drugs."?;Salvador Dali;Pablo Picasso;Vincent Van Gogh;Jackson Pollock;3
+The ancient Greek statue Ahprodite of Milos, better known as Venus de Milo, is currently on display in what museum?;The Louvre in Paris, France;;;;1
+The Starry Night is an oil on canvas painted by which post-impressionist painter?;Vincent van Gogh;Pablo Picasso;Henri Rousseau;Pierre Bonnard;1
+Who painted a late 15th-century mural known as the Last Supper?;Leonardo da Vinci;Raphael;Paolo Uccello;Giotto;1
+Which artist is credited with developing linear perspective?;Brunelleschi;Filippino Lippi;Leonardo da Vinci;Michelangelo;1
+What French sculptor created the Statue of Liberty?;Frédéric Auguste Bartholdi;Gustave Eiffel;Édouard René de Laboulaye;Emma Lazarus;1
+Which artist created the sculpture "The Thinker"?;Auguste Rodin;Rembrandt;Michelangelo;Camille Claudel;1
+Who painted the famous Dutch Golden age painting "The Night Watch"?;Rembrandt;Peter Paul Rubens;Caravaggio;Vincent van Gogh;1
+What color do you get when you mix yellow and blue?;Green;Red;Blue;White;1
+Who was the Spanish surrealist painter best known for his work "The Persistence of Memory"?;Salvador Dalí;Pablo Picasso;Rene Magritte;Joan Miro;1
+The art of paper folding is known as what?;Origami;Quilling;Kirigami;Chiyogami;1
+How many paintings did Vincent Van Gogh sell during his lifetime?;One;Seven;Thirteen;Three;1
+Which painter started the impressionist movement?;Claude Monet;Edouard Manet;Vincent van Gogh;Pierre-Auguste Renoir;1
+What painter is famous for cutting off part of his ear?;Vincent Van Gogh;Pablo Picasso;Claude Monet;Paul Gauguin;1
+Who painted the Sistine Chapel?;Michelangelo;Leonardo;Donatello;Raphael;1

@@ -1,2 +1,14 @@
-Bruce Dickinson is the lead singer of what band?;Metallica;Iron Maiden;The Red Hot Chili Peppers;Slayer;1
-What actor is known for his roles in films such as Transformers, Disturbia, and Nymphomaniac?;Nicholas Cage;Nicholas Cage;Shia LaBeouf;Nicholas Cage;2
+Bruce Dickinson is the lead singer of what band?;Iron Maiden;Metallica;The Red Hot Chili Peppers;Slayer;1
+What actor is known for his roles in films such as Transformers, Disturbia, and Nymphomaniac?;Shia LaBeouf;Nicholas Cage;Nicholas Cage;Nicholas Cage;2
+The Simpsons first debuted as a short in what American variety television show?;The Tracey Ullman Show;Three of a Kind;Girls on Top;Tracey Takes On...;1
+Who played the title character in the teen sitcom musical comedy "Hannah Montana"?;Miley Cyrus;Liam Hemsworth;Noah Cyrus;Billy Ray;1
+Rod Serling created what famous science fiction television show?;The Twilight Zone;Doctor Who;The X-Files;Star Trek: The Next Generation;1
+In what city does SpongeBob SquarePants live?;Bikini Bottom;Rock Bottom;Bottom's Up;Tentacle Acres;1
+On the hit show Seinfeld what was Kramer's first name?;Cosmo;Jerry;George;Newman;1
+Which Teenage Mutant Ninja Turtle always wears red bandanas?;Raphael;Donatello;Leonardo;Michelangelo;1
+Who is the voice of Spongebob Squarepants?;Tom Kenny;Rodger Bumpass;Bill Fagerbakke;Clancy Brown;1
+Who was the first actor to play Doctor Who?;William Hartnell;Tom Baker;Matt Smith;Peter Capaldi;1
+Which actor played the captain of the Enterprise in the television series "Star Trek the Next Generation"?;Patrick Stewart;Brent Spiner;LeVar Burton;Jonathan Frakes;1
+What are the names of the two Muppet characters that heckle the rest of the cast from their balcony seats?;Statler and Waldorf;Miss Piggy and Beaker;Kermit the Frog and Miss Piggy;Gonzo and Fozzie Bear;1
+How many fingers do the Simpsons cartoon characters have?;Four;Three;Five;Six;1
+Which 1980's television hit was renamed El Coche Fantastico for its Spanish viewers?;Knight Rider;The Dukes of Hazzard;The Rockford Files;The Fantastic Car;1

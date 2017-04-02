@@ -59,9 +59,11 @@ public class CardDeck {
             // The next 4 (indices 1 - 4 inclusive) are the multiple choice
             card.setChoices(Arrays.copyOfRange(line, 1, 5));
 
-            // The last piece (index 5) will be the index of the correct answer
+            // The first index will be the index of the correct answer
             // in the Card's choices array;
-            card.setCorrectAnsIndex(Integer.parseInt(line[5]));
+            card.setCorrectAnsIndex(0);
+
+            card.shuffleAnswers();
 
             temp.add(card);
 

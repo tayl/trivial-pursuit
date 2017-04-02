@@ -1,2 +1,19 @@
-What is the only sea without any coasts?;Adriatic Sea;Sargasso Sea;Celebes Sea;Mediterannean Sea;1
-What city is the capital of Australia?;Sydney;Perth;Melbourne;Canberra;3
+What is the only sea without any coasts?;Sargasso Sea;Adriatic Sea;Celebes Sea;Mediterannean Sea;1
+What city is the capital of Australia?;Canberra;Sydney;Perth;Melbourne;3
+What is the national language of India?;Hindi;Tamil;Punjabi;Bengali;1
+What is the largest island in the Caribbean Sea?;Cuba;Haiti;Dominican Republic;Jamaica;1
+Which city in the United States is known as the "Windy City"?;Chicago;Detroit;Brooklyn;Anaheim;1
+Which of the following is not a borough of New York City?;Manhattan;The Bronx;Queens;Tribeca;1
+In what city would you find the La Brea Tar Pits?;Los Angeles;San Diego;San Francisco;Sacramento;1
+What city is the capital of China?;Beijing;Shanghai;Tianjin;Shenzhen;1
+What city is the capital of Canada?;Ottawa;Toronto;Montreal;Calgary;1
+Long Island is a part of which US state?;New York;New Jersey;Massachusetts;Connecticut;1
+Yerevan, one of the world's oldest continuously inhabited cities, is the capital of what country?;Armenia;Turkey;Iran;Ukraine;1
+What is the capital of Iceland?;Reykjavik;Akureyri;Selfoss;Hafnarfjörður;1
+What is the largest lake in Africa?;Lake Victoria;Lake Malawi;Lake Albert;Lake Kainji;1
+What is the name of the deepest known location in the Earth's oceans?;Challenger Deep;Tonga Trench;Kermadec Point;Hawaiian Trench;1
+What is the tallest building in New York?;One World Trade Center;Empire State Building;Trump World Tower;Citigroup Center;1
+Canada's highest mountain is located in which province or territory?;Yukon;Manitoba;Alberta;Quebec;1
+How many times zones are in Canada?;Six;Five;Four;Three;1
+How many US states border the Pacific Ocean?;Five;Four;Six;Three;1
+Which ocean trench is the deepest?;Mariana Trench;Tonga Trench;Japan Trench;Kermadec Trench;1

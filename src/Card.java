@@ -42,4 +42,14 @@ public class Card {
     public void setCorrectAnsIndex(int correctAnsIndex) {
         this.correctAnsIndex = correctAnsIndex;
     }
+
+    public void shuffleAnswers() {
+        for (int i = 0; i < choices.length * 4; i++) {
+            int randomIndex = (int) (Math.random() * choices.length);
+            String randomQuestion = choices[randomIndex];
+            choices[randomIndex] = choices[correctAnsIndex];
+            choices[correctAnsIndex] = randomQuestion;
+            correctAnsIndex = randomIndex;
+        }
+    }
 }

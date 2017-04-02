@@ -28,6 +28,48 @@ public class Game {
 
     }
 
+    // this is just a test drive. I'm assuming we'll get player array from
+    // the GUI class
+    public static void main(String[] args) throws IOException {
+
+        Player[] testPlayers = new Player[3];
+
+        for (int i = 0; i < testPlayers.length; i++) {
+
+            testPlayers[i] = new Player();
+            testPlayers[i].setPlayerName("Shia LaBeouf" + Integer.toString(i));
+
+        }
+
+        Game game = new Game(testPlayers);
+
+        for (Player player : testPlayers) {
+
+            System.out.println(player.getPlayerName() + " " + player.getTurnOrder());
+
+        }
+
+        for (int i = 0; i < 100; i++) {
+            Card card = game.cardDeck.drawRandomCard(Category.ENTERTAINMENT);
+
+            if (card == null) {
+                System.out.println("All cards drawn from this category");
+                continue;
+            }
+
+            System.out.println(card.getQuestion() + ":");
+
+            String[] answers = card.getChoices();
+
+            for (int j = 0; j < answers.length; j++) {
+                System.out.println(j + ") " + answers[j]);
+            }
+
+            System.out.println("----- " + card.getCorrectAns());
+            System.out.println();
+        }
+    }
+
     // This for-loop triple threat monstrosity is one way to solve the
     // "who goes first" RNG requirement without worrying about duplicates
     private void setPlayersTurnOrder(Player[] players) {
@@ -56,39 +98,6 @@ public class Game {
                 players[temp.getTurnOrder()] = temp;
 
             }
-        }
-    }
-
-    // this is just a test drive. I'm assuming we'll get player array from
-    // the GUI class
-    public static void main(String[] args) throws IOException {
-
-        Player[] testPlayers = new Player[3];
-
-        for (int i = 0; i < testPlayers.length; i++) {
-
-            testPlayers[i] = new Player();
-            testPlayers[i].setPlayerName("Shia LaBeouf" + Integer.toString(i));
-
-        }
-
-        Game game = new Game(testPlayers);
-
-        for (Player player : testPlayers) {
-
-            System.out.println(player.getPlayerName() + " " + player.getTurnOrder());
-
-        }
-
-        for (int i = 0; i < 10; i++) {
-            Card card = game.cardDeck.drawRandomCard(Category.ENTERTAINMENT);
-
-            if(card == null) {
-                System.out.println("All cards drawn from this category");
-                continue;
-            }
-
-            System.out.println(card.getQuestion());
         }
     }
 }
