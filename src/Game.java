@@ -32,12 +32,12 @@ public class Game {
     // the GUI class
     public static void main(String[] args) throws IOException {
 
-        Player[] testPlayers = new Player[3];
+        Player[] testPlayers = new Player[15];
 
         for (int i = 0; i < testPlayers.length; i++) {
 
             testPlayers[i] = new Player();
-            testPlayers[i].setPlayerName("Shia LaBeouf" + Integer.toString(i));
+            testPlayers[i].setPlayerName("Shia LaBeouf" + i);
 
         }
 
@@ -45,11 +45,11 @@ public class Game {
 
         for (Player player : testPlayers) {
 
-            System.out.println(player.getPlayerName() + " " + player.getTurnOrder());
+            System.out.println(player.getPlayerName() + "\t" + player.getTurnOrder());
 
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 0; i++) {
             Card card = game.cardDeck.drawRandomCard(Category.randomCategory());
 
             if (card == null) {
@@ -99,5 +99,21 @@ public class Game {
 
             }
         }
+    }
+
+    // This achieves the same result. Rearranging of the players array to match turn order didn't actually do that in
+    // the previous method, and even if it did, getTurnOrder() would return the index, which we have inherently by the
+    // nature of an array. Because of this, I left that out.
+    private void setPlayersTurnOrder2(Player[] players) {
+        for (int i = 0; i < players.length; i++) {
+            int rand = (int) (Math.random() * players.length);
+            Player temp = players[i];
+            players[i] = players[rand];
+            players[rand] = temp;
+        }
+
+//        for (int i = 0; i < players.length; i++) {
+//            players[i].setTurnOrder(i);
+//        }
     }
 }
