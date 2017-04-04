@@ -15,6 +15,15 @@ public class Player {
     String playerName;
     //The player's position on the board, as per the space map
     int position = 0;
+    //True if this is a human player, false if AI
+    boolean human;
+    
+    //name constructor for Player
+    public Player(String playerName)
+    {
+        this.playerName = playerName;
+        this.position = 0;
+    }
 
     //returns the integer that denotes the player's current space
     public int getPosition() {
@@ -47,7 +56,7 @@ public class Player {
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
-
+    
     //set the wedge that corresponds to the current category
     //make sure to pass an enum Category into this
     public void setWedge(Category category)
@@ -56,25 +65,33 @@ public class Player {
         {
             case ARTS:
                 wedges[0] = true;
+                break;
             case ENTERTAINMENT:
                 wedges[1] = true;
+                break;
             case EVENTS:
                 wedges[2] = true;
+                break;
             case PLACES:
                 wedges[3] = true;
+                break;
             case SCIENCE:
                 wedges[4] = true;
+                break;
             case SPORTS:
                 wedges[5] = true;
+                break;
+            default:
+                break;
         }
     }
-
+    
     //returns the wedge array
     public boolean [] getWedges()
     {
         return wedges;
     }
-
+    
     /*public static void main(String [] args)
     {
         Player test = new Player();
@@ -83,14 +100,14 @@ public class Player {
         int i = 0;
         for(boolean b: test.wedges)
         {
-
+            
             if(b == true)
                 System.out.println(i);
             i++;
         }
-
+        
         test.turnOrder = Die.rollThatSucker();
         System.out.println(test.turnOrder);
     }*/
-
+    
 }
