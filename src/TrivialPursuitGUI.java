@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -75,7 +74,8 @@ public class TrivialPursuitGUI extends JFrame {
         // flag representing player name entry dialog, is set when open
         private boolean name_entry_dialog;
         private char[] valid_text_buffer;
-        private int valid_text_buffer_ptr;
+        private int valid_text_buffer_end;
+        private int valid_text_buffer_start;
         // the active game
         private Game game;
         // players in the active game
@@ -84,7 +84,7 @@ public class TrivialPursuitGUI extends JFrame {
         private Image image = null;
 
         public GamePanel() {
-            valid_text_buffer = new char[1024];
+            valid_text_buffer = new char[64];
 
             // testing code
             players = new Player[5];
@@ -153,11 +153,30 @@ public class TrivialPursuitGUI extends JFrame {
                         menu = !menu;
                     }
 
+                    if (e.getKeyCode() == 8) {
+                        if (valid_text_buffer_end > valid_text_buffer_start) {
+                            valid_text_buffer_end--;
+                        }
+                    }
+
+                    // if the name entry dialog is open and enter key is pressed,
+                    if (name_entry_dialog && e.getKeyCode() == 10) {
+                        name_entry_dialog = false;
+                        System.out.println(getBufferLastString());
+                    }
+
+                    if (e.getKeyCode() == 192) {
+                        if (!name_entry_dialog) {
+                            valid_text_buffer_start = valid_text_buffer_end;
+                        }
+                        name_entry_dialog = !name_entry_dialog;
+                    }
+
                     // capture player names when name dialog appears
                     // accept on enter or mouse click
-                    if (name_entry_dialog && ((e.getKeyChar() >= 'a' && e.getKeyChar() <= 'z') || e.getKeyChar() == 10)) {
-                        valid_text_buffer[valid_text_buffer_ptr++ % valid_text_buffer.length] = e.getKeyChar();
-                        System.out.println(Arrays.toString(valid_text_buffer));
+                    if (name_entry_dialog && ((e.getKeyChar() >= 'a' && e.getKeyChar() <= 'z') || e.getKeyChar() == ' ' || e.getKeyChar() == '!' || e.getKeyChar() == 10)) {
+                        valid_text_buffer[valid_text_buffer_end++ % valid_text_buffer.length] = e.getKeyChar();
+                        System.out.println(getBufferLastString());
                     }
 
                     System.out.println("Key pressed " + e.getKeyCode());
@@ -210,6 +229,19 @@ public class TrivialPursuitGUI extends JFrame {
             if (menu) {
                 drawMenu(g);
             }
+
+            if (name_entry_dialog) {
+                drawNameEntryDialog(g);
+            }
+        }
+
+        // candidate for optimization/caching
+        private String getBufferLastString() {
+            StringBuilder string = new StringBuilder();
+            for (int i = valid_text_buffer_start; i < valid_text_buffer_end; i++) {
+                string.append(valid_text_buffer[i % valid_text_buffer.length]);
+            }
+            return string.toString();
         }
 
         private void drawMenu(Graphics g) {
@@ -219,6 +251,18 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) - image.getWidth(null) / 8, getHeight() / 2, null);
             image = graphicAssets.getImage("btn_cont.png");
             g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 8, getHeight() / 2, null);
+        }
+
+        private void drawNameEntryDialog(Graphics g) {
+            g.setColor(new Color(0f, 0f, 0f, 0.5f));
+            g.fillRect(0, 0, getWidth(), getHeight());
+            image = graphicAssets.getImage("name_Select_Popup_R1.png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+            g.setColor(Color.white);
+            g.fill3DRect(getWidth() / 2 - graphicAssets.scaledCoordinate(700) / 2, getHeight() / 2, graphicAssets.scaledCoordinate(700), graphicAssets.scaledCoordinate(100), true);
+            g.setColor(Color.black);
+            g.setFont(new Font("Arial", Font.BOLD, 25));
+            g.drawString(getBufferLastString(), getWidth() / 2 - graphicAssets.scaledCoordinate(330), getHeight() / 2 + graphicAssets.scaledCoordinate(70));
         }
 
         private void drawPlayerCards(Graphics g) {
