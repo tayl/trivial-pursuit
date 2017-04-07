@@ -10,14 +10,16 @@
  */
 public class Player {
     //The player's turn priority. first 1 will go, then 2, then 3 and so on
-    int turnOrder;
+    int gamePiece;
     //The name of this player
     String playerName;
     //The player's position on the board, as per the space map
     int position = 0;
     //True if this is a human player, false if AI
     boolean human;
-    
+    //boolean array for obtained wedges
+    boolean[] wedges = new boolean[6];
+
     //name constructor for Player
     public Player(String playerName)
     {
@@ -34,17 +36,15 @@ public class Player {
     public void setPosition(int position) {
         this.position = position;
     }
-    //boolean array for obtained wedges
-    boolean [] wedges = new boolean[6];
 
     //returns the player's turn priority
-    public int getTurnOrder() {
-        return turnOrder;
+    public int getGamePiece() {
+        return gamePiece;
     }
 
     //sets the player's turn priority
-    public void setTurnOrder(int turnOrder) {
-        this.turnOrder = turnOrder;
+    public void setGamePiece(int turnOrder) {
+        this.gamePiece = turnOrder;
     }
 
     //get's the player's name
@@ -106,8 +106,8 @@ public class Player {
             i++;
         }
         
-        test.turnOrder = Die.rollThatSucker();
-        System.out.println(test.turnOrder);
+        test.gamePiece = Die.rollThatSucker();
+        System.out.println(test.gamePiece);
     }*/
     
 }

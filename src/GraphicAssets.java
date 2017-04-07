@@ -88,7 +88,7 @@ public class GraphicAssets implements Runnable {
         asset_cache.put("menu_Screen_Landscape.png", image);
 
         for (File file : graphic_assets) {
-            if (!asset_cache.containsKey(file.getName())) {
+            if (!asset_cache.containsKey(file.getName()) && file.getName().contains(".png")) {
                 try {
                     bufferedImage = ImageIO.read(getClass().getResource(file.getName()));
 
@@ -101,7 +101,6 @@ public class GraphicAssets implements Runnable {
                 } catch (IOException e) {
                     System.out.printf("Failed to load %s\n", file.getName());
                     e.printStackTrace();
-                    continue;
                 }
             }
         }

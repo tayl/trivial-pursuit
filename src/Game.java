@@ -34,6 +34,7 @@ public class Game {
     private final Player[] players;
     // the deck of avaliable cards
     private final CardDeck cardDeck;
+
     // Constructor for game
     // takes in the array of players
     public Game(Player[] players) throws IOException {
@@ -67,7 +68,7 @@ public class Game {
 
         Game game = new Game(testPlayers);
         for (Player player : testPlayers) {
-            System.out.println(player.getPlayerName() + " " + player.getTurnOrder());
+            System.out.println(player.getPlayerName() + " " + player.getGamePiece());
         }
 
         Player winner = game.playGame();
@@ -94,25 +95,25 @@ public class Game {
 
         // Dish out the shuffled turn numbers
         for (int i = 0; i < numPlayers; i++)
-            players[i].setTurnOrder(turns.get(i));
+            players[i].setGamePiece(turns.get(i));
 
         // rearrange the players array to be in turn order instead
         // of creation order. That way we can easily loop-through
         // turn-based play.
         for (int i = 0; i < numPlayers; i++) {
 
-            if (players[i].getTurnOrder() != i) {
+            if (players[i].getGamePiece() != i) {
 
                 Player temp = players[i];
-                players[i] = players[players[i].getTurnOrder()];
-                players[temp.getTurnOrder()] = temp;
+                players[i] = players[players[i].getGamePiece()];
+                players[temp.getGamePiece()] = temp;
 
             }
         }
     }
 
     // This achieves the same result. Rearranging of the players array to match turn order didn't actually do that in
-    // the previous method, and even if it did, getTurnOrder() would return the index, which we have inherently by the
+    // the previous method, and even if it did, getGamePiece() would return the index, which we have inherently by the
     // nature of an array. Because of this, I left that out.
     private void setPlayersTurnOrder(Player[] players) {
         for (int i = 0; i < players.length; i++) {
@@ -121,10 +122,6 @@ public class Game {
             players[i] = players[rand];
             players[rand] = temp;
         }
-
-//        for (int i = 0; i < players.length; i++) {
-//            players[i].setTurnOrder(i);
-//        }
     }
 
     // Daneil:
@@ -187,7 +184,7 @@ public class Game {
     private boolean checkWedges(Player player) {
         boolean temp = true;
         for (Boolean b : player.wedges) {
-            if (b == false)
+            if (!b)
                 temp = false;
         }
         return temp;
