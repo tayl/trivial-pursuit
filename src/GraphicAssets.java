@@ -46,9 +46,15 @@ public class GraphicAssets implements Runnable {
     /**
      * This is bad OOP
      */
-    public void load() {
+    public void load() throws IOException {
+
         File graphic_assets_folder = new File("graphic_assets");
-        File[] graphic_assets = graphic_assets_folder.listFiles();
+        File[] graphic_assets = graphic_assets_folder.listFiles(pathname -> {
+            if (pathname.getName().contains(".png")) {
+                return true;
+            }
+            return false;
+        });
 
         if (graphic_assets == null) {
             System.out.println("Folder graphic_assets not found.");
@@ -66,7 +72,7 @@ public class GraphicAssets implements Runnable {
 
         // grab the loading screen first, the remaining images will scale based off of it
         try {
-            bufferedImage = ImageIO.read(getClass().getResource("menu_Screen_Landscape.png"));
+            bufferedImage = ImageIO.read(new File(graphic_assets_folder.getName() + File.separatorChar + "menu_Screen_Landscape.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,9 +94,9 @@ public class GraphicAssets implements Runnable {
         asset_cache.put("menu_Screen_Landscape.png", image);
 
         for (File file : graphic_assets) {
-            if (!asset_cache.containsKey(file.getName()) && file.getName().contains(".png")) {
+            if (!asset_cache.containsKey(file.getName())) {
                 try {
-                    bufferedImage = ImageIO.read(getClass().getResource(file.getName()));
+                    bufferedImage = ImageIO.read(new File(graphic_assets_folder.getName() + File.separatorChar + file.getName()));
 
                     scaled_width = scaledCoordinate(bufferedImage.getWidth());
                     scaled_height = scaledCoordinate(bufferedImage.getHeight());
@@ -114,6 +120,10 @@ public class GraphicAssets implements Runnable {
 
     @Override
     public void run() {
-        load();
+        try {
+            load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
