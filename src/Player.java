@@ -19,6 +19,8 @@ public class Player {
     boolean human;
     //boolean array for obtained wedges
     boolean[] wedges = new boolean[6];
+    // stores the filename for the player's piece
+    String playerPieceName;
 
     //name constructor for Player
     public Player(String playerName)
@@ -56,7 +58,7 @@ public class Player {
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
-    
+
     //set the wedge that corresponds to the current category
     //make sure to pass an enum Category into this
     public void setWedge(Category category)
@@ -85,7 +87,7 @@ public class Player {
                 break;
         }
     }
-    
+
     //returns the wedge array
     public boolean [] getWedges()
     {
@@ -109,5 +111,5 @@ public class Player {
         test.gamePiece = Die.rollThatSucker();
         System.out.println(test.gamePiece);
     }*/
-    
+
 }

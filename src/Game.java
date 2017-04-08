@@ -12,7 +12,7 @@ import java.util.Scanner;
 // Colton:
 // I created this class to have a space for writing game functionality.
 // Any or all of this can be moved or deleted as you see fit.
-public class Game {
+public class Game implements Runnable {
     // Daniel:
     // the categories for each space on the gameboard
     // 0 = none
@@ -34,20 +34,9 @@ public class Game {
     private final Player[] players;
     // the deck of avaliable cards
     private final CardDeck cardDeck;
+    private boolean awaitingStumpChoice;
 
-    // Constructor for game
-    // takes in the array of players
-    public Game(Player[] players) throws IOException {
-
-        this.players = players;
-        this.numPlayers = players.length;
-
-        this.cardDeck = new CardDeck();
-
-        // puts players in the players array based on turn order
-        setPlayersTurnOrder(players);
-    }
-
+    /*
     // this is just a test drive. I'm assuming we'll get player array from
     // the GUI class
     public static void main(String[] args) throws IOException {
@@ -74,6 +63,23 @@ public class Game {
         Player winner = game.playGame();
 
         System.out.println(winner.playerName + " won the game!");
+    }
+*/
+    private int stumpChoice;
+    private boolean awaitingAnswerChoice;
+    private int answerChoice;
+
+    // Constructor for game
+    // takes in the array of players
+    public Game(Player[] players) throws IOException {
+
+        this.players = players;
+        this.numPlayers = players.length;
+
+        this.cardDeck = new CardDeck();
+
+        // puts players in the players array based on turn order
+        setPlayersTurnOrder(players);
     }
 
     public Player[] getPlayers() {
@@ -127,7 +133,7 @@ public class Game {
     // Daneil:
     // plays the entire ding-dang game, all in one method.
     // returns the winner
-    private Player playGame() throws IOException {
+    public Player playGame() throws IOException {
         boolean gameOver = false;
         Player winner = null;
         // while the game isn't over...
@@ -135,11 +141,15 @@ public class Game {
             // for each player...
             for (Player p : players) {
                 // play our their turn. If they received all wedges...
-                if (playTurn(p)) {
-                    // the game is over
-                    gameOver = true;
-                    winner = p;
-                    break;
+                try {
+                    if (playTurn(p)) {
+                        // the game is over
+                        gameOver = true;
+                        winner = p;
+                        break;
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -149,11 +159,16 @@ public class Game {
 
     // Daniel:
     // runs through a single turn for a single player
-    private boolean playTurn(Player player) throws IOException {
+    private boolean playTurn(Player player) throws InterruptedException {
         System.out.println(player.playerName + ", it's your turn!");
 
         //player rolls a die to decide movement spaces
-        int roll = Die.rollThatSucker();
+        int roll;
+        if (player.human) {
+            roll = Die.rollThatSucker();
+        } else
+            roll = Die.rollThatSucker();
+
         System.out.println("You rolled a " + roll + ".");
 
         //move the player that number of spaces
@@ -239,14 +254,37 @@ public class Game {
         }
     }
 
+    public boolean isAwaitingStumpChoice() {
+        return awaitingStumpChoice;
+    }
+
+    public void setStumpChoice(boolean stump) {
+
+        if (stump) {
+            stumpChoice = 0;
+        } else {
+            stumpChoice = 1;
+        }
+
+        awaitingStumpChoice = false;
+    }
+
+    public boolean isAwaitingAnswerChoice() {
+        return awaitingAnswerChoice;
+    }
+
+    public void setAnswerChoice(int answer) {
+        answerChoice = answer;
+
+        awaitingAnswerChoice = false;
+    }
+
     // Daniel:
     // goes through the process of answering a question from start to finish
     // returns the category of a successfully completed question, null otherwise
-    private Category questionTime(Player player) throws IOException {
+    private Category questionTime(Player player) throws InterruptedException {
         Card card;
-        // the user input was just for testing, front end should replace text input
-        // with screen prompts and buttons
-        Scanner userInput = new Scanner(System.in);
+
         //draw a card for the appropriate category. return null if on a white space
         switch (SPACE_CATEGORIES[player.position]) {
             case 1:
@@ -275,15 +313,27 @@ public class Game {
         System.out.println(card.question);
         System.out.println("Do you want to answer the question, or try and stump your opponents? (Enter 1 to answer or 2 to stump)");
 
+        // the user input was just for testing, front end should replace text input
+        // with screen prompts and buttons
+        Scanner userInput = new Scanner(System.in);
+
+
+        //TODO
+
         //if the player chooses to answer
-        int input;
-        if (player.human)
-            input = userInput.nextInt();
-        else
-            input = simpleAI(1);
-        if (input == 1) {
+        if (player.human) {
+            awaitingStumpChoice = true;
+
+            while (awaitingStumpChoice) {
+                Thread.sleep(50L);
+            }
+        } else {
+            stumpChoice = simpleAI(1);
+        }
+
+        if (stumpChoice == 1) {
             System.out.println("Here are your choices. Enter the number for your selection:");
-            int i = 0;
+            int i = 1;
             //give them their choices
             for (String s : card.choices)
                 System.out.println(i++ + ". " + s);
@@ -291,11 +341,17 @@ public class Game {
             // get their response. if its correct, move them to the proper space
             // and return the category of the answered question (waaaay at the
             // bottom)
-            if (player.human)
-                input = userInput.nextInt();
-            else
-                input = simpleAI(2);
-            if (input == card.correctAnsIndex) {
+            if (player.human) {
+                awaitingAnswerChoice = true;
+
+                while (awaitingAnswerChoice) {
+                    Thread.sleep(50L);
+                }
+            } else {
+                answerChoice = simpleAI(2);
+            }
+            if (answerChoice == card.correctAnsIndex) {
+                System.out.println("Correct answer");
                 switch (card.category) {
                     case SPORTS:
                         player.position = 29;
@@ -318,10 +374,10 @@ public class Game {
                     default:
                         break;
                 }
-            }
-            //if they got a fail whale, return null (no wedge given)
-            else
+            } else {
+                System.out.println("Incorrect answer");
                 return null;
+            }
         }
         // if the player chooses to stump...
         else {
@@ -333,25 +389,32 @@ public class Game {
             for (Player p : players) {
                 // that isn't the stumper...
                 if (p != player) {
-                    int i = 0;
+                    int i = 1;
                     // ask them the question...
                     System.out.println(p.playerName + " enter the number of your selected choice.");
                     System.out.println(card.question);
                     for (String s : card.choices) {
                         System.out.println(i++ + ". " + s);
                     }
+
                     // and record their response in the frequency array
-                    if (p.human)
-                        input = userInput.nextInt();
-                    else
-                        input = simpleAI(2);
-                    temp[input]++;
+                    if (p.human) {
+                        awaitingAnswerChoice = true;
+
+                        while (awaitingAnswerChoice) {
+                            Thread.sleep(50L);
+                        }
+                    } else {
+                        answerChoice = simpleAI(2);
+                    }
+
+                    temp[answerChoice]++;
                 }
             }
             // if the council's answer is correct...
             if (decideChoice(temp) == card.correctAnsIndex) {
-                // STUMPED NERD!!! LELELELL. All other players move foreward a space
-                System.out.println("Uh-oh, your oppenents managed to stump you! They all moved forewar one space and get your wedge.");
+                // player stumped
+                System.out.println("Uh-oh, your opponents managed to stump you! They all moved forward one space and get your wedge.");
                 for (Player p : players) {
                     if (player != p) {
                         move(p);
@@ -365,7 +428,7 @@ public class Game {
             else {
                 // move the stumper to the respective home space for the
                 // question category
-                System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.category + "wedge goes to you.");
+                System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.category + " wedge goes to you.");
                 switch (card.category) {
                     case SPORTS:
                         player.position = 29;
@@ -393,9 +456,8 @@ public class Game {
         return card.category;
     }
 
-    private boolean finalQuestion(Player player) throws IOException {
+    private boolean finalQuestion(Player player) throws InterruptedException {
         Card card;
-        Scanner userInput = new Scanner(System.in);
         System.out.println("Since you've got all your wedges, its time to answer the FINAL QUESTION:");
 
         switch (SPACE_CATEGORIES[player.position]) {
@@ -430,7 +492,14 @@ public class Game {
             System.out.println(i++ + ". " + s);
         }
 
-        if (userInput.nextInt() == card.correctAnsIndex) {
+        //TODO
+        awaitingAnswerChoice = true;
+
+        while (awaitingAnswerChoice) {
+            Thread.sleep(50L);
+        }
+
+        if (answerChoice == card.correctAnsIndex) {
             System.out.println("Wowie!!! You won :O");
             return true;
         } else {
@@ -500,5 +569,14 @@ public class Game {
         }
         System.out.println("Uh oh, something's gone wrong with the AI.");
         return -1;
+    }
+
+    @Override
+    public void run() {
+        try {
+            playGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -23,15 +23,17 @@ public class CardDeck {
         this.setQuestions();
     }
 
-    void setQuestions() throws IOException {
-
-        this.readInQuestions(Category.ARTS, "questions/arts-questions.txt");
-        this.readInQuestions(Category.ENTERTAINMENT, "questions/ent-questions.txt");
-        this.readInQuestions(Category.EVENTS, "questions/events-questions.txt");
-        this.readInQuestions(Category.PLACES, "questions/places-questions.txt");
-        this.readInQuestions(Category.SCIENCE, "questions/sci-questions.txt");
-        this.readInQuestions(Category.SPORTS, "questions/sports-questions.txt");
-
+    void setQuestions() {
+        try {
+            this.readInQuestions(Category.ARTS, "questions/arts-questions.txt");
+            this.readInQuestions(Category.ENTERTAINMENT, "questions/ent-questions.txt");
+            this.readInQuestions(Category.EVENTS, "questions/events-questions.txt");
+            this.readInQuestions(Category.PLACES, "questions/places-questions.txt");
+            this.readInQuestions(Category.SCIENCE, "questions/sci-questions.txt");
+            this.readInQuestions(Category.SPORTS, "questions/sports-questions.txt");
+        } catch (IOException e) {
+            System.out.println("Error reading in questions and answers from text files");
+        }
     }
 
     void readInQuestions(Category category, String fileName) throws IOException {
@@ -76,7 +78,7 @@ public class CardDeck {
      * @param category The category from which the card is randomly drawn
      * @return The card that was drawn, or null if the category is empty
      */
-    public Card drawRandomCard(Category category) throws IOException {
+    public Card drawRandomCard(Category category) {
 
         ArrayList<Card> temp = this.deck.get(category);
 

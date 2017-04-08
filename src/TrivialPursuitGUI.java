@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Created by Taylor on 4/6/2017.
@@ -25,6 +27,7 @@ public class TrivialPursuitGUI extends JFrame {
 
         // start paint timer
         gamePanel.timer.start();
+
 
         // set applet dimensions to 70% of screen width, or 1920 pixels, whichever is less
         Dimension screen_resolution = Toolkit.getDefaultToolkit().getScreenSize();
@@ -55,7 +58,7 @@ public class TrivialPursuitGUI extends JFrame {
     }
 
     public static void main(String[] s) {
-        new TrivialPursuitGUI();
+        TrivialPursuitGUI gui = new TrivialPursuitGUI();
     }
 
     /**
@@ -65,40 +68,52 @@ public class TrivialPursuitGUI extends JFrame {
 
         // paint timer
         private final Timer timer = new Timer(50, this);
-
+        // map of player space (index) to coordinate pair (x pixels, y pixels)
+        // in 1920 / 1080 resolution
+        Point[] positionMap;
         // menu flags - when set, menu is being drawn
         private boolean start_menu = true;
         private boolean playing_number_selection_menu;
         private boolean name_entry_menu;
         private boolean game_piece_menu;
-
         // the current player being configured in the players array
         private int current_player_setup;
-
         // flags used for the fade transition
         private boolean fading;
         private boolean transition;
         private int fade_count;
-
         // are we playing?
         private boolean playing;
-
         // text buffer and pointers to accept user names
         private char[] valid_text_buffer;
         private int valid_text_buffer_end;
         private int valid_text_buffer_start;
-
         // the active game
         private Game game;
-
         // players in the active game
         private Player[] players;
-
         // placeholder image object, not used for any one thing
         private Image image = null;
 
         private GamePanel() {
             valid_text_buffer = new char[32];
+
+            // try to read the PositionMap.txt file into the point array
+            positionMap = new Point[73];
+            try {
+                Scanner in = new Scanner(new File("positionMap.txt"));
+                for (int i = 0; i < 73; i++) {
+                    int x = in.nextInt();
+                    int y = in.nextInt();
+                    // the first int per line is the x value, 2nd int is the y value
+                    positionMap[i] = new Point(x, y);
+                }
+
+                // close it when we're done
+                in.close();
+            } catch (IOException e) {
+                System.out.println("Couldn't open PositionMap.txt");
+            }
 
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -107,6 +122,19 @@ public class TrivialPursuitGUI extends JFrame {
 
                     // logic here to translate coordinates to game piece presses
                     // polar coords?
+
+                    //TODO
+//                    if (game.isAwaitingAnswerChoice()) {
+//                        if (boundsContainCoords(answer_x, answer_y, image, e)) {
+//                            game.setAnswerChoice(answer);
+//                        }
+//                    }
+//
+//                    if (game.isAwaitingStumpChoice()) {
+//                        if (boundsContainCoords(stump_x, stump_y, image, e)) {
+//                            game.setStumpChoice(answer);
+//                        }
+//                    }
 
                     // this logic handles clicks for the game piece selection menu. it checks whether the mouse click coordinates fall over a game piece image
                     // if they do, the current user being configured is assigned that game piece
@@ -233,6 +261,27 @@ public class TrivialPursuitGUI extends JFrame {
 
                 @Override
                 public void keyPressed(KeyEvent e) {
+
+                    //TODO
+                    if (playing && game.isAwaitingAnswerChoice() && (e.getKeyChar() >= '1' && e.getKeyChar() <= '4')) {
+                        if (e.getKeyChar() == '1') {
+                            game.setAnswerChoice(0);
+                        }
+                        if (e.getKeyChar() == '2') {
+                            game.setAnswerChoice(1);
+                        }
+                        if (e.getKeyChar() == '3') {
+                            game.setAnswerChoice(2);
+                        }
+                        if (e.getKeyChar() == '4') {
+                            game.setAnswerChoice(3);
+                        }
+                    }
+
+                    if (playing && game.isAwaitingStumpChoice() && (e.getKeyChar() >= '1' && e.getKeyChar() <= '2')) {
+                        game.setStumpChoice(e.getKeyChar() == '2');
+                    }
+
                     // escape key pressed, restart game
                     if (e.getKeyCode() == 27) {
                         start_menu = true;
@@ -256,6 +305,7 @@ public class TrivialPursuitGUI extends JFrame {
                     if (name_entry_menu && e.getKeyCode() == 10) {
                         name_entry_menu = false;
                         players[current_player_setup] = new Player(getBufferLastString());
+                        players[current_player_setup].human = true;
                         valid_text_buffer_start = valid_text_buffer_end;
                         System.out.println("Set player " + current_player_setup + " name to " + players[current_player_setup].getPlayerName());
                     }
@@ -295,6 +345,7 @@ public class TrivialPursuitGUI extends JFrame {
             if (playing) {
                 drawGameBoard(g);
                 drawPlayerCards(g);
+                drawGameState(g);
             }
 
             // transitions from user configuration to playing state
@@ -305,6 +356,7 @@ public class TrivialPursuitGUI extends JFrame {
                 System.out.println("Setup complete, start the game");
                 try {
                     game = new Game(players);
+                    new Thread(game).start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -523,6 +575,23 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, 0, (getHeight() - image.getHeight(null)) / 2, this);
         }
 
+        private void drawGameState(Graphics2D g) {
+            Point point;
+            if (game != null) {
+                for (Player p : game.getPlayers()) {
+                    point = positionMap[p.position];
+                    image = graphicAssets.getImage(p.playerPieceName);
+                    g.drawImage(image, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
+                }
+            } else {
+                for (Player p : players) {
+                    point = positionMap[p.position];
+                    image = graphicAssets.getImage(p.playerPieceName);
+                    g.drawImage(image, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
+                }
+            }
+        }
+
         /**
          * Draws the loading screen graphic
          * <p>
@@ -608,21 +677,27 @@ public class TrivialPursuitGUI extends JFrame {
                 switch (player.getGamePiece() % 6) {
                     case 0:
                         image = graphicAssets.getImage("baby_Shia.png");
+                        player.playerPieceName = "baby_Sjia.png";
                         break;
                     case 1:
                         image = graphicAssets.getImage("even_Stevens_Shia.png");
+                        player.playerPieceName = "even_Stevens_Shia.png";
                         break;
                     case 2:
                         image = graphicAssets.getImage("just_Do_It_Shia.png");
+                        player.playerPieceName = "just_Do_It_Shia.png";
                         break;
                     case 3:
                         image = graphicAssets.getImage("mid_Twenties_Shia.png");
+                        player.playerPieceName = "mid_Twenties_Shia.png";
                         break;
                     case 4:
                         image = graphicAssets.getImage("not_Famous_Shia.png");
+                        player.playerPieceName = "not_Famous_Shia.png";
                         break;
                     case 5:
                         image = graphicAssets.getImage("well_Adjusted_Shia.png");
+                        player.playerPieceName = "well_Adjusted_Shia.png";
                         break;
                 }
 
