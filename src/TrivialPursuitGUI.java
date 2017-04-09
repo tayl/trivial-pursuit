@@ -574,9 +574,9 @@ public class TrivialPursuitGUI extends JFrame {
 
         private void drawYesNoOptions(Graphics2D g) {
             image = graphicAssets.getImage("yes_Button.png");
-            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2 * 3, getHeight() / 2 - image.getHeight(null) / 2, null);
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2 * 3, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
             image = graphicAssets.getImage("no_Button.png");
-            g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+            g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
         }
 
         private void drawAnswerSelectionMenu(Graphics2D g) {
@@ -606,18 +606,18 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
 
             int y_offset = 50;
-            g.drawString(current_card.getQuestion(), getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            g.drawString(current_card.getQuestion(), getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
             y_offset += 40;
 
             String[] answerChoices = current_card.getChoices();
 
-            g.drawString(answerChoices[0], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            g.drawString(answerChoices[0], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
             y_offset += 40;
-            g.drawString(answerChoices[1], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            g.drawString(answerChoices[1], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
             y_offset += 40;
-            g.drawString(answerChoices[2], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            g.drawString(answerChoices[2], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
             y_offset += 40;
-            g.drawString(answerChoices[3], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            g.drawString(answerChoices[3], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
         }
 
         /**

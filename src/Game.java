@@ -46,6 +46,8 @@ public class Game implements Runnable {
     private long isRolling;
     private int rollResult;
 
+    private long isWaiting;
+
     // Constructor for game
     // takes in the array of players
     public Game(Player[] players) throws IOException {
