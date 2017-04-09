@@ -8,18 +8,18 @@ What is the second most abundant element in the earth's atmosphere?;Oxygen;Carbo
 What is the largest 3-digit prime number?;997;1009;977;947;1
 Which psychologist investigated obedience using electric shocks?;Stanley Milgram;Philip Zimbardo;Solomon Asch;Michael Almereyda;1
 What vitamin is produced when a person is exposed to sunlight?;Vitamin D;Vitamin E;Vitamin C;Vitamin B;1
-What is the name for a protein that acts as a biological catalyst?;Enzyme;Substrate;Product;Supressor;1
+What is the name for a protein that acts as a biological catalyst?;Enzyme;Substrate;Product;Suppressor;1
 Which planet in our solar system has the most oxygen?;Earth;Mars;Venus;Jupiter;1
 The European Organization for Nuclear Research is known by what four letter acronym?;CERN;EONR;HARP;NUKE;1
 What is the melting point of ice in Fahrenheit?;32°F;25°F;36°F;42°F;1
-Which is not a base unit of measurement in the metric system?;Meter;Liter;Gram;Ounce;1
+Which is not a base unit of measurement in the metric system?;Ounce;Liter;Gram;Meter;1
 What does the acronym "NASA" stand for?;National Aeronautics and Space Administration;National Advancement of Space & Aeronautics;National Aeronautics and Space Agency;North American Space Administration;1
 How many planets in our solar system have moons?;Six;Fix;Four;Three;1
 What layer of the atmosphere lies between the troposphere and mesosphere?;Stratosphere;Thermosphere;Exosphere;Plastosphere;1
 Which planet is farthest from the sun?;Neptune;Uranus;Saturn;Venus;1
 What is the common name for stone consisting of the minerals jadeite or nephrite?;Jade;Sandstone;Netrite;Marble;1
 What is the largest internal organ of the human body?;Liver;Stomach;Heart;Large Intestine;1
-Curiosity is a car-sized rover that was luanched by NASA in 2011 to explore which planet?;Mars;The Sun;Earth;Pluto;1
+Curiosity is a car-sized rover that was launched by NASA in 2011 to explore which planet?;Mars;The Sun;Earth;Pluto;1
 Who came up with the three laws of motion?;Sir Isaac Newton;Johannes Kepler;Galileo Galilei;Albert Einstein;1
 Who designed and built the Pascaline?;Blaise Pascal;Gottfried Wilhelm Leibniz;Rene Descartes;Charles Babbage;1
 What is the medical term for bad breath?;Halitosis;Fetororis;Stank;Stomatosis;1

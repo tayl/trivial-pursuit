@@ -35,6 +35,8 @@ public class Game implements Runnable {
     private final CardDeck cardDeck;
 
     private Card card;
+    private Player currentPlayer;
+    private boolean lastAnswer;
 
     private boolean awaitingStumpChoice;
     private int stumpChoice;
@@ -61,8 +63,24 @@ public class Game implements Runnable {
         setPlayersTurnOrder(players);
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public Card getCard() {
         return card;
+    }
+
+    public boolean getLastAnswer() {
+        return lastAnswer;
+    }
+
+    public boolean isWaiting() {
+        return System.nanoTime() < isWaiting;
+    }
+
+    public void setWaiting(int seconds) {
+        isWaiting = System.nanoTime() + seconds * 1000000000L;
     }
 
     public boolean isAwaitingRoll() {
@@ -167,9 +185,13 @@ public class Game implements Runnable {
     // Daniel:
     // runs through a single turn for a single player
     private boolean playTurn(Player player) throws InterruptedException {
-        System.out.println(player.playerName + ", it's your turn!");
+        System.out.println(player.getPlayerName() + ", it's your turn!");
 
         setAwaitingRoll(true);
+
+        while (isAwaitingRoll()) {
+            Thread.sleep(50L);
+        }
 
         rollResult = Die.rollThatSucker();
 
@@ -179,7 +201,7 @@ public class Game implements Runnable {
         for (int i = 0; i < rollResult; i++) {
             move(player);
         }
-        System.out.println("You're now on space " + player.position);
+        System.out.println("You're now on space " + player.getPosition());
 
         // then ask the player their question
         Category temp = questionTime(player);
@@ -204,7 +226,7 @@ public class Game implements Runnable {
     // returns true if they do
     private boolean checkWedges(Player player) {
         boolean temp = true;
-        for (Boolean b : player.wedges) {
+        for (Boolean b : player.getWedges()) {
             if (!b)
                 temp = false;
         }
@@ -216,29 +238,29 @@ public class Game implements Runnable {
     // just update after the entire move is completed, or after each space.
     // Once the player leaves a spoke, they will move around the board in a clockwise fasion.
     private void move(Player player) {
-        switch (player.position) {
+        switch (player.getPosition()) {
             // moves the player from the wheel space. this is random right now, but front end should
             // implement an actionListener to allow the player to choose which spoke they want to go to
             case 0:
                 // heres what makes it random
                 switch (Die.rollThatSucker()) {
                     case 1:
-                        player.position = 43;
+                        player.setPosition(43);
                         break;
                     case 2:
-                        player.position = 48;
+                        player.setPosition(48);
                         break;
                     case 3:
-                        player.position = 53;
+                        player.setPosition(53);
                         break;
                     case 4:
-                        player.position = 58;
+                        player.setPosition(58);
                         break;
                     case 5:
-                        player.position = 63;
+                        player.setPosition(63);
                         break;
                     case 6:
-                        player.position = 68;
+                        player.setPosition(68);
                         break;
                 }
                 break;
@@ -250,12 +272,12 @@ public class Game implements Runnable {
             case 67:
             case 72:
                 //fancy math magic
-                player.position = (((player.position / 6) - 7) * 7) + 1;
+                player.setPosition((((player.getPosition() / 6) - 7) * 7) + 1);
                 break;
             default:
                 // if the player isn't at the center or on the edge of a spoke,
                 // just iterate their position
-                player.position++;
+                player.setPosition(player.getPosition() + 1);
                 break;
         }
     }
@@ -292,7 +314,7 @@ public class Game implements Runnable {
         Card card;
 
         //draw a card for the appropriate category. return null if on a white space
-        switch (SPACE_CATEGORIES[player.position]) {
+        switch (SPACE_CATEGORIES[player.getPosition()]) {
             case 1:
                 card = cardDeck.drawRandomCard(Category.SPORTS);
                 break;
@@ -321,10 +343,8 @@ public class Game implements Runnable {
 
         this.card = card;
 
-        //TODO
-
         //if the player chooses to answer
-        if (player.human) {
+        if (player.isHuman()) {
             awaitingStumpChoice = true;
 
             while (awaitingStumpChoice) {
@@ -344,7 +364,10 @@ public class Game implements Runnable {
             // get their response. if its correct, move them to the proper space
             // and return the category of the answered question (waaaay at the
             // bottom)
-            if (player.human) {
+
+            currentPlayer = player;
+
+            if (player.isHuman()) {
                 awaitingAnswerChoice = true;
 
                 while (awaitingAnswerChoice) {
@@ -355,36 +378,38 @@ public class Game implements Runnable {
             }
             if (answerChoice == card.getCorrectAnsIndex()) {
                 System.out.println("Correct answer");
+                lastAnswer = true;
                 switch (card.getCategory()) {
                     case SPORTS:
-                        player.position = 29;
+                        player.setPosition(29);
                         break;
                     case SCIENCE:
-                        player.position = 8;
+                        player.setPosition(8);
                         break;
                     case PLACES:
-                        player.position = 22;
+                        player.setPosition(22);
                         break;
                     case EVENTS:
-                        player.position = 36;
+                        player.setPosition(36);
                         break;
                     case ENTERTAINMENT:
-                        player.position = 1;
+                        player.setPosition(1);
                         break;
                     case ARTS:
-                        player.position = 15;
+                        player.setPosition(15);
                         break;
                     default:
                         break;
                 }
             } else {
+                lastAnswer = false;
                 System.out.println("Incorrect answer");
                 return null;
             }
         }
         // if the player chooses to stump...
         else {
-            System.out.println(player.playerName + " has chosen to stump their opponents! Get ready everyone...");
+            System.out.println(player.getPlayerName() + " has chosen to stump their opponents! Get ready everyone...");
             //frequency array for stump choices
             int[] temp = new int[card.getChoices().length];
 
@@ -394,14 +419,16 @@ public class Game implements Runnable {
                 if (p != player) {
                     int i = 1;
                     // ask them the question...
-                    System.out.println(p.playerName + " enter the number of your selected choice.");
+                    System.out.println(p.getPlayerName() + " enter the number of your selected choice.");
                     System.out.println(card.getQuestion());
                     for (String s : card.getChoices()) {
                         System.out.println(i++ + ". " + s);
                     }
 
+                    currentPlayer = p;
+
                     // and record their response in the frequency array
-                    if (p.human) {
+                    if (p.isHuman()) {
                         awaitingAnswerChoice = true;
 
                         while (awaitingAnswerChoice) {
@@ -418,6 +445,7 @@ public class Game implements Runnable {
             if (decideChoice(temp) == card.getCorrectAnsIndex()) {
                 // player stumped
                 System.out.println("Uh-oh, your opponents managed to stump you! They all moved forward one space and get your wedge.");
+                lastAnswer = false;
                 for (Player p : players) {
                     if (player != p) {
                         move(p);
@@ -432,24 +460,25 @@ public class Game implements Runnable {
                 // move the stumper to the respective home space for the
                 // question category
                 System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.getCategory() + " wedge goes to you.");
+                lastAnswer = true;
                 switch (card.getCategory()) {
                     case SPORTS:
-                        player.position = 29;
+                        player.setPosition(29);
                         break;
                     case SCIENCE:
-                        player.position = 8;
+                        player.setPosition(8);
                         break;
                     case PLACES:
-                        player.position = 22;
+                        player.setPosition(22);
                         break;
                     case EVENTS:
-                        player.position = 36;
+                        player.setPosition(36);
                         break;
                     case ENTERTAINMENT:
-                        player.position = 1;
+                        player.setPosition(1);
                         break;
                     case ARTS:
-                        player.position = 15;
+                        player.setPosition(15);
                         break;
                     default:
                         return null;
@@ -463,7 +492,7 @@ public class Game implements Runnable {
         Card card;
         System.out.println("Since you've got all your wedges, its time to answer the FINAL QUESTION:");
 
-        switch (SPACE_CATEGORIES[player.position]) {
+        switch (SPACE_CATEGORIES[player.getPosition()]) {
             case 1:
                 card = cardDeck.drawRandomCard(Category.SPORTS);
                 break;
@@ -495,7 +524,8 @@ public class Game implements Runnable {
             System.out.println(i++ + ". " + s);
         }
 
-        //TODO
+        currentPlayer = player;
+
         awaitingAnswerChoice = true;
 
         while (awaitingAnswerChoice) {
@@ -503,9 +533,11 @@ public class Game implements Runnable {
         }
 
         if (answerChoice == card.getCorrectAnsIndex()) {
+            lastAnswer = true;
             System.out.println("Wowie!!! You won :O");
             return true;
         } else {
+            lastAnswer = false;
             System.out.println("Oh gosh, that one was a fail whale. Better luck next time :(");
             return false;
         }

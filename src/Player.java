@@ -11,52 +11,71 @@ import java.awt.*;
  */
 public class Player {
     //The player's turn priority. first 1 will go, then 2, then 3 and so on
-    int gamePiece;
+    private int gamePiece;
     //The name of this player
-    String playerName;
+    private String playerName;
     //The player's position on the board, as per the space map
-    int position = 0;
+    private int position;
+    //The players position as reported to the GUI
+    private int drawnPosition;
     //True if this is a human player, false if AI
-    boolean human;
+    private boolean human;
     //boolean array for obtained wedges
-    boolean[] wedges = new boolean[6];
+    private boolean[] wedges = new boolean[6];
 
-    Image playerImage;
+    private Image playerImage;
 
     //name constructor for Player
     public Player(String playerName) {
         this.playerName = playerName;
-        this.position = 0;
     }
 
-    //returns the integer that denotes the player's current space
-    public int getPosition() {
-        return position;
-    }
-
-    //sets the player's current space
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    //returns the player's turn priority
     public int getGamePiece() {
         return gamePiece;
     }
 
-    //sets the player's turn priority
-    public void setGamePiece(int turnOrder) {
-        this.gamePiece = turnOrder;
+    public void setGamePiece(int gamePiece) {
+        this.gamePiece = gamePiece;
     }
 
-    //get's the player's name
     public String getPlayerName() {
         return playerName;
     }
 
-    //sets the player's name
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
+    }
+
+    public int getDrawnPosition() {
+        return drawnPosition;
+    }
+
+    public void setDrawnPosition(int drawnPosition) {
+        this.drawnPosition = drawnPosition;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean isHuman() {
+        return human;
+    }
+
+    public void setHuman(boolean human) {
+        this.human = human;
+    }
+
+    public Image getPlayerImage() {
+        return playerImage;
+    }
+
+    public void setPlayerImage(Image playerImage) {
+        this.playerImage = playerImage;
     }
 
     //set the wedge that corresponds to the current category

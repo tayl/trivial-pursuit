@@ -72,8 +72,6 @@ public class TrivialPursuitGUI extends JFrame {
         // map of player space (index) to coordinate pair (x pixels, y pixels)
         // in 1920 / 1080 resolution
         Point[] positionMap;
-        // variable used for storing nanotime
-        private double timeVar;
         // menu flags - when set, menu is being drawn
         private boolean start_menu = true;
         private boolean playing_number_selection_menu;
@@ -85,6 +83,7 @@ public class TrivialPursuitGUI extends JFrame {
         private boolean fading;
         private boolean transition;
         private int fade_count;
+        private int move_count;
         // are we playing?
         private boolean playing;
         // text buffer and pointers to accept user names
@@ -123,21 +122,55 @@ public class TrivialPursuitGUI extends JFrame {
                 public void mousePressed(MouseEvent e) {
                     System.out.println("Mouse pressed at " + e.getX() + ", " + e.getY());
 
-                    // logic here to translate coordinates to game piece presses
-                    // polar coords?
+                    if (playing && game.isAwaitingRoll()) {
+                        image = graphicAssets.getImage("dice_Drawing.png");
+                        if (boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), image, e)) {
+                            game.setAwaitingRoll(false);
+                            game.setRolling();
+                            game.setWaiting(10);
+                        }
+                        return;
+                    }
 
-                    //TODO
-//                    if (game.isAwaitingAnswerChoice()) {
-//                        if (boundsContainCoords(answer_x, answer_y, image, e)) {
-//                            game.setAnswerChoice(answer);
-//                        }
-//                    }
-//
-//                    if (game.isAwaitingStumpChoice()) {
-//                        if (boundsContainCoords(stump_x, stump_y, image, e)) {
-//                            game.setStumpChoice(answer);
-//                        }
-//                    }
+                    if (playing && game.isAwaitingAnswerChoice()) {
+                        image = graphicAssets.getImage("ARTS_Card.png");
+                        int x_coord = getWidth() / 2 - image.getWidth(null) / 2 + graphicAssets.scaledCoordinate(100);
+                        int y_coord = getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100);
+
+                        image = graphicAssets.getImage("a_Choice_Button.png");
+                        int y_offset = 150;
+
+                        if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
+                            game.setAnswerChoice(0);
+                        }
+                        y_offset += 60;
+
+                        if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
+                            game.setAnswerChoice(1);
+                        }
+                        y_offset += 60;
+
+                        if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
+                            game.setAnswerChoice(2);
+                        }
+                        y_offset += 60;
+
+                        if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
+                            game.setAnswerChoice(3);
+                        }
+
+                        game.setWaiting(5);
+                    }
+
+                    if (playing && game.isAwaitingStumpChoice()) {
+                        image = graphicAssets.getImage("yes_Button.png");
+                        if (boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2 * 3, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), image, e)) {
+                            game.setStumpChoice(true);
+                        }
+                        if (boundsContainCoords(getWidth() / 2 + image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), image, e)) {
+                            game.setStumpChoice(false);
+                        }
+                    }
 
                     // this logic handles clicks for the game piece selection menu. it checks whether the mouse click coordinates fall over a game piece image
                     // if they do, the current user being configured is assigned that game piece
@@ -269,6 +302,7 @@ public class TrivialPursuitGUI extends JFrame {
                         if (e.getKeyChar() == ' ') {
                             game.setAwaitingRoll(false);
                             game.setRolling();
+                            game.setWaiting(10);
                         }
                         return;
                     }
@@ -278,20 +312,22 @@ public class TrivialPursuitGUI extends JFrame {
                         return;
                     }
 
-                    //TODO
+                    // choose an answer
                     if (playing && game.isAwaitingAnswerChoice() && (e.getKeyChar() >= '1' && e.getKeyChar() <= '4')) {
-                        if (e.getKeyChar() == '1') {
+                        if (e.getKeyChar() == '1' || e.getKeyChar() == 'a') {
                             game.setAnswerChoice(0);
                         }
-                        if (e.getKeyChar() == '2') {
+                        if (e.getKeyChar() == '2' || e.getKeyChar() == 'b') {
                             game.setAnswerChoice(1);
                         }
-                        if (e.getKeyChar() == '3') {
+                        if (e.getKeyChar() == '3' || e.getKeyChar() == 'c') {
                             game.setAnswerChoice(2);
                         }
-                        if (e.getKeyChar() == '4') {
+                        if (e.getKeyChar() == '4' || e.getKeyChar() == 'd') {
                             game.setAnswerChoice(3);
                         }
+
+                        game.setWaiting(5);
                     }
 
                     if (playing && game.isAwaitingStumpChoice() && (e.getKeyChar() >= '1' && e.getKeyChar() <= '2')) {
@@ -318,17 +354,17 @@ public class TrivialPursuitGUI extends JFrame {
                     }
 
                     // if the name entry dialog is open and enter key is pressed, close it and accept the string as a player name
-                    if (name_entry_menu && e.getKeyCode() == 10) {
+                    if (name_entry_menu && valid_text_buffer_start != valid_text_buffer_end && e.getKeyCode() == 10) {
                         name_entry_menu = false;
                         players[current_player_setup] = new Player(getBufferLastString());
-                        players[current_player_setup].human = true;
+                        players[current_player_setup].setHuman(true);
                         valid_text_buffer_start = valid_text_buffer_end;
                         System.out.println("Set player " + current_player_setup + " name to " + players[current_player_setup].getPlayerName());
                     }
 
                     // capture text when name dialog appears and store to the buffer
-                    // accept on enter or mouse click (TODO)
-                    if (name_entry_menu && ((e.getKeyChar() >= 'a' && e.getKeyChar() <= 'z') || e.getKeyChar() == ' ' || e.getKeyChar() == '!' || e.getKeyChar() == 10)) {
+                    // accept on enter or mouse click
+                    if (name_entry_menu && ((e.getKeyChar() >= 'a' && e.getKeyChar() <= 'z') || ((e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) || e.getKeyChar() == ' ' || e.getKeyChar() == '!' || e.getKeyChar() == 10)) {
                         valid_text_buffer[valid_text_buffer_end++ % valid_text_buffer.length] = e.getKeyChar();
                         System.out.println(getBufferLastString());
                     }
@@ -363,6 +399,27 @@ public class TrivialPursuitGUI extends JFrame {
                 drawPlayerCards(g);
                 drawPlayerGamePieces(g);
 
+                if (game.isRolling()) {
+                    //drawShadowOverlay(g);
+                    drawRollTheDice(g);
+                    drawAnimatedDice(g);
+                }
+
+                if (game.hasRolled()) {
+                    //drawShadowOverlay(g);
+                    drawDiceRollResult(g);
+                    drawDice(g);
+                }
+
+                if (game.isWaiting()) {
+//                    if (game.getLastAnswer()) {
+//                        drawSuccess(g);
+//                    } else {
+//                        drawFail(g);
+//                    }
+                    return;
+                }
+
                 if (game.isAwaitingStumpChoice()) {
                     //drawShadowOverlay(g);
                     drawTrumpSelectionMenu(g);
@@ -377,18 +434,6 @@ public class TrivialPursuitGUI extends JFrame {
                     drawRollTheDice(g);
                     drawDice(g);
                 }
-
-                if (game.isRolling()) {
-                    //drawShadowOverlay(g);
-                    drawRollTheDice(g);
-                    drawAnimatedDice(g);
-                }
-
-                if (game.hasRolled()) {
-                    //drawShadowOverlay(g);
-                    drawDiceRollResult(g);
-                    drawDice(g);
-                }
             }
 
             // transitions from user configuration to playing state
@@ -400,7 +445,6 @@ public class TrivialPursuitGUI extends JFrame {
                 try {
                     game = new Game(players);
                     new Thread(game).start();
-                    timeVar = System.nanoTime();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -555,9 +599,13 @@ public class TrivialPursuitGUI extends JFrame {
 
         private void drawAnimatedDice(Graphics2D g) {
             image = graphicAssets.getImage("dice_Drawing.png");
-            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
-            g.setColor(Color.white);
-            g.drawString("ROLLING ANIMATION", getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100));
+
+            g.drawImage(
+                    image,
+                    getWidth() / 2 - image.getWidth(null) / 2 + graphicAssets.scaledCoordinate((int) (Math.random() * 25)),
+                    getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(25) + graphicAssets.scaledCoordinate((int) (Math.random() * 100)),
+                    null
+            );
         }
 
         private void drawDiceRollResult(Graphics2D g) {
@@ -577,6 +625,18 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2 * 3, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
             image = graphicAssets.getImage("no_Button.png");
             g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
+        }
+
+        private void drawSuccess(Graphics2D g) {
+            g.setColor(Color.green);
+            g.setFont(new Font("Calibri", Font.BOLD, 50));
+            g.drawString("Correct!", graphicAssets.scaledCoordinate(900), graphicAssets.scaledCoordinate(540));
+        }
+
+        private void drawFail(Graphics2D g) {
+            g.setColor(Color.red);
+            g.setFont(new Font("Calibri", Font.BOLD, 50));
+            g.drawString("Incorrect!", graphicAssets.scaledCoordinate(900), graphicAssets.scaledCoordinate(540));
         }
 
         private void drawAnswerSelectionMenu(Graphics2D g) {
@@ -605,19 +665,34 @@ public class TrivialPursuitGUI extends JFrame {
 
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
 
+            int x_coord = getWidth() / 2 - image.getWidth(null) / 2 + graphicAssets.scaledCoordinate(100);
+            int y_coord = getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100);
             int y_offset = 50;
-            g.drawString(current_card.getQuestion(), getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
+            g.drawString("Question for " + game.getCurrentPlayer().getPlayerName(), x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset));
             y_offset += 40;
+            g.drawString(current_card.getQuestion(), x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset));
 
             String[] answerChoices = current_card.getChoices();
 
-            g.drawString(answerChoices[0], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
-            y_offset += 40;
-            g.drawString(answerChoices[1], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
-            y_offset += 40;
-            g.drawString(answerChoices[2], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
-            y_offset += 40;
-            g.drawString(answerChoices[3], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(y_offset));
+            y_offset += 60;
+            image = graphicAssets.getImage("a_Choice_Button.png");
+            g.drawImage(image, x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), null);
+            g.drawString(answerChoices[0], x_coord + image.getWidth(null) + graphicAssets.scaledCoordinate(20), y_coord + graphicAssets.scaledCoordinate(y_offset + 30));
+
+            y_offset += 60;
+            image = graphicAssets.getImage("b_Choice_Button.png");
+            g.drawImage(image, x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), null);
+            g.drawString(answerChoices[1], x_coord + image.getWidth(null) + graphicAssets.scaledCoordinate(20), y_coord + graphicAssets.scaledCoordinate(y_offset + 30));
+
+            y_offset += 60;
+            image = graphicAssets.getImage("c_Choice_Button.png");
+            g.drawImage(image, x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), null);
+            g.drawString(answerChoices[2], x_coord + image.getWidth(null) + graphicAssets.scaledCoordinate(20), y_coord + graphicAssets.scaledCoordinate(y_offset + 30));
+
+            y_offset += 60;
+            image = graphicAssets.getImage("d_Choice_Button.png");
+            g.drawImage(image, x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), null);
+            g.drawString(answerChoices[3], x_coord + image.getWidth(null) + graphicAssets.scaledCoordinate(20), y_coord + graphicAssets.scaledCoordinate(y_offset + 30));
         }
 
         /**
@@ -697,10 +772,37 @@ public class TrivialPursuitGUI extends JFrame {
         }
 
         private void drawPlayerGamePieces(Graphics2D g) {
-            Point point;
+            int divisions = 25;
+            Point drawn_point;
+            Point actual_point;
+
             for (Player p : game.getPlayers()) {
-                point = positionMap[p.position];
-                g.drawImage(p.playerImage, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
+                drawn_point = positionMap[p.getDrawnPosition()];
+
+                if (p.getDrawnPosition() != p.getPosition() && game.isWaiting() && !game.isRolling() && !game.hasRolled()) {
+                    if (move_count == 0) {
+                        move_count = divisions;
+                    }
+
+                    actual_point = positionMap[p.getPosition()];
+
+                    int x_difference = actual_point.x - drawn_point.x;
+                    int y_difference = actual_point.y - drawn_point.y;
+
+                    int x_offset = (int) (x_difference * ((double) (divisions - move_count) / (double) divisions));
+                    int y_offset = (int) (y_difference * ((double) (divisions - move_count) / (double) divisions));
+
+                    g.drawImage(p.getPlayerImage(), graphicAssets.scaledCoordinate((int) drawn_point.getX() + x_offset - 33), graphicAssets.scaledCoordinate((int) drawn_point.getY() + y_offset - 10), null);
+
+                    move_count--;
+
+                    if (move_count == 0) {
+                        p.setDrawnPosition(p.getPosition());
+                    }
+                } else {
+                    drawn_point = positionMap[p.getDrawnPosition()];
+                    g.drawImage(p.getPlayerImage(), graphicAssets.scaledCoordinate((int) drawn_point.getX() - 33), graphicAssets.scaledCoordinate((int) drawn_point.getY() - 10), null);
+                }
             }
         }
 
@@ -807,7 +909,7 @@ public class TrivialPursuitGUI extends JFrame {
                         break;
                 }
 
-                player.playerImage = image;
+                player.setPlayerImage(image);
 
                 g.drawImage(image, x + graphicAssets.scaledCoordinate(33), y + graphicAssets.scaledCoordinate(10), null);
 
