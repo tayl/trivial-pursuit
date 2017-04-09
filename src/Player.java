@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,7 +7,6 @@
  */
 
 /**
- *
  * @author Daniel
  */
 public class Player {
@@ -19,12 +20,11 @@ public class Player {
     boolean human;
     //boolean array for obtained wedges
     boolean[] wedges = new boolean[6];
-    // stores the filename for the player's piece
-    String playerPieceName;
+
+    Image playerImage;
 
     //name constructor for Player
-    public Player(String playerName)
-    {
+    public Player(String playerName) {
         this.playerName = playerName;
         this.position = 0;
     }
@@ -61,10 +61,8 @@ public class Player {
 
     //set the wedge that corresponds to the current category
     //make sure to pass an enum Category into this
-    public void setWedge(Category category)
-    {
-        switch(category)
-        {
+    public void setWedge(Category category) {
+        switch (category) {
             case ARTS:
                 wedges[0] = true;
                 break;
@@ -89,8 +87,7 @@ public class Player {
     }
 
     //returns the wedge array
-    public boolean [] getWedges()
-    {
+    public boolean[] getWedges() {
         return wedges;
     }
     

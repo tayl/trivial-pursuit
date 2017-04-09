@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +37,7 @@ public class Game implements Runnable {
     private final CardDeck cardDeck;
     private boolean awaitingStumpChoice;
 
+    private boolean rollTheDie;
     /*
     // this is just a test drive. I'm assuming we'll get player array from
     // the GUI class
@@ -68,6 +70,7 @@ public class Game implements Runnable {
     private int stumpChoice;
     private boolean awaitingAnswerChoice;
     private int answerChoice;
+    private int dieRoll;
 
     // Constructor for game
     // takes in the array of players
@@ -77,9 +80,28 @@ public class Game implements Runnable {
         this.numPlayers = players.length;
 
         this.cardDeck = new CardDeck();
+        this.rollTheDie = false;
 
         // puts players in the players array based on turn order
         setPlayersTurnOrder(players);
+    }
+
+    public boolean isRollTheDie() {
+        return rollTheDie;
+    }
+
+    public void setRollTheDie(boolean rollTheDie) {
+        this.rollTheDie = rollTheDie;
+    }
+
+    public int getDieRoll() {
+        return dieRoll;
+    }
+
+    public void setDieRoll(int dieRoll) {
+        this.dieRoll = dieRoll;
+
+        this.rollTheDie = false;
     }
 
     public Player[] getPlayers() {
@@ -160,19 +182,25 @@ public class Game implements Runnable {
     // Daniel:
     // runs through a single turn for a single player
     private boolean playTurn(Player player) throws InterruptedException {
+        Image image;
         System.out.println(player.playerName + ", it's your turn!");
 
         //player rolls a die to decide movement spaces
-        int roll;
         if (player.human) {
-            roll = Die.rollThatSucker();
+            rollTheDie = true;
+            while (!Die.rolled) {
+                Thread.sleep(50L);
+            }
+            dieRoll = Die.rollThatSucker();
+            while (rollTheDie)
+                Thread.sleep(50L);
         } else
-            roll = Die.rollThatSucker();
+            dieRoll = Die.rollThatSucker();
 
-        System.out.println("You rolled a " + roll + ".");
+        System.out.println("You rolled a " + dieRoll + ".");
 
         //move the player that number of spaces
-        for (int i = 0; i < roll; i++)
+        for (int i = 0; i < dieRoll; i++)
             move(player);
         System.out.println("You're now on space " + player.position);
 

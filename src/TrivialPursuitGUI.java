@@ -11,13 +11,14 @@ import java.util.Scanner;
 
 public class TrivialPursuitGUI extends JFrame {
 
-    private GraphicAssets graphicAssets;
+    public GraphicAssets graphicAssets;
+    public GamePanel gamePanel;
 
 
     public TrivialPursuitGUI() {
 
         // create a new GamePanel which will have all drawing done on it
-        GamePanel gamePanel = new GamePanel();
+        gamePanel = new GamePanel();
 
         // set focusable so keystrokes are visible to the listeners
         gamePanel.setFocusable(true);
@@ -71,6 +72,8 @@ public class TrivialPursuitGUI extends JFrame {
         // map of player space (index) to coordinate pair (x pixels, y pixels)
         // in 1920 / 1080 resolution
         Point[] positionMap;
+        // variable used for storing nanotime
+        private double timeVar;
         // menu flags - when set, menu is being drawn
         private boolean start_menu = true;
         private boolean playing_number_selection_menu;
@@ -262,6 +265,12 @@ public class TrivialPursuitGUI extends JFrame {
                 @Override
                 public void keyPressed(KeyEvent e) {
 
+                    if (playing && game.isRollTheDie()) {
+                        if (e.getKeyChar() == ' ') {
+                            Die.rolled = true;
+                        }
+                    }
+
                     //TODO
                     if (playing && game.isAwaitingAnswerChoice() && (e.getKeyChar() >= '1' && e.getKeyChar() <= '4')) {
                         if (e.getKeyChar() == '1') {
@@ -346,6 +355,10 @@ public class TrivialPursuitGUI extends JFrame {
                 drawGameBoard(g);
                 drawPlayerCards(g);
                 drawGameState(g);
+
+                if (game != null) {
+                    drawDie(g);
+                }
             }
 
             // transitions from user configuration to playing state
@@ -357,6 +370,7 @@ public class TrivialPursuitGUI extends JFrame {
                 try {
                     game = new Game(players);
                     new Thread(game).start();
+                    timeVar = System.nanoTime();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -499,6 +513,33 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 2 * 2, getHeight() / 2 + image.getHeight(null) / 2 * 2, null);
         }
 
+        // pauses for seconds number of seconds
+        private void pause(double seconds) {
+            timeVar = (double) System.nanoTime() / 1000000000.0;
+            while (timeVar + seconds > (double) System.nanoTime() / 1000000000.0) {
+            }
+        }
+
+        private void drawDie(Graphics2D g) {
+            if (!Die.rolled) {
+                image = graphicAssets.getImage("roll_Dice.png");
+                g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+                timeVar = (double) System.nanoTime() / 1000000000.0;
+                return;
+            }
+            if (game.isRollTheDie()) {
+                image = graphicAssets.getImage("dice_Drawing.png");
+                g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+                if ((double) System.nanoTime() / 1000000000.0 >= timeVar + 1.2) {
+                    game.setRollTheDie(false);
+                    timeVar = (double) System.nanoTime() / 1000000000.0;
+                }
+            } else if ((double) System.nanoTime() / 1000000000.0 <= timeVar + 2.0) {
+                image = graphicAssets.getImage("roll_Dice_" + game.getDieRoll() + ".png");
+                g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+            }
+        }
+
         /**
          * Draws the player name selection/input menu
          * <p>
@@ -580,14 +621,12 @@ public class TrivialPursuitGUI extends JFrame {
             if (game != null) {
                 for (Player p : game.getPlayers()) {
                     point = positionMap[p.position];
-                    image = graphicAssets.getImage(p.playerPieceName);
-                    g.drawImage(image, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
+                    g.drawImage(p.playerImage, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
                 }
             } else {
                 for (Player p : players) {
                     point = positionMap[p.position];
-                    image = graphicAssets.getImage(p.playerPieceName);
-                    g.drawImage(image, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
+                    g.drawImage(p.playerImage, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
                 }
             }
         }
@@ -677,29 +716,25 @@ public class TrivialPursuitGUI extends JFrame {
                 switch (player.getGamePiece() % 6) {
                     case 0:
                         image = graphicAssets.getImage("baby_Shia.png");
-                        player.playerPieceName = "baby_Sjia.png";
                         break;
                     case 1:
                         image = graphicAssets.getImage("even_Stevens_Shia.png");
-                        player.playerPieceName = "even_Stevens_Shia.png";
                         break;
                     case 2:
                         image = graphicAssets.getImage("just_Do_It_Shia.png");
-                        player.playerPieceName = "just_Do_It_Shia.png";
                         break;
                     case 3:
                         image = graphicAssets.getImage("mid_Twenties_Shia.png");
-                        player.playerPieceName = "mid_Twenties_Shia.png";
                         break;
                     case 4:
                         image = graphicAssets.getImage("not_Famous_Shia.png");
-                        player.playerPieceName = "not_Famous_Shia.png";
                         break;
                     case 5:
                         image = graphicAssets.getImage("well_Adjusted_Shia.png");
-                        player.playerPieceName = "well_Adjusted_Shia.png";
                         break;
                 }
+
+                player.playerImage = image;
 
                 g.drawImage(image, x + graphicAssets.scaledCoordinate(33), y + graphicAssets.scaledCoordinate(10), null);
 

@@ -9,6 +9,7 @@
  * @author Daniel
  */
 public class Die {
+    public static boolean rolled = false;
 
     //roll's the die
     public static int rollThatSucker()
