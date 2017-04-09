@@ -109,23 +109,5 @@ public class Player {
     public boolean[] getWedges() {
         return wedges;
     }
-    
-    /*public static void main(String [] args)
-    {
-        Player test = new Player();
-        Category testColor = Category.SPORTS;
-        test.setWedge(testColor);
-        int i = 0;
-        for(boolean b: test.wedges)
-        {
-            
-            if(b == true)
-                System.out.println(i);
-            i++;
-        }
-        
-        test.gamePiece = Die.rollThatSucker();
-        System.out.println(test.gamePiece);
-    }*/
 
 }

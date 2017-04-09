@@ -57,7 +57,7 @@ public class GraphicAssets implements Runnable {
         });
 
         if (graphic_assets == null) {
-            System.out.println("Folder graphic_assets not found.");
+            // System.out.println("Folder graphic_assets not found.");
             return;
         }
 
@@ -105,7 +105,7 @@ public class GraphicAssets implements Runnable {
                     ++assets_loaded;
                     asset_cache.put(file.getName(), image);
                 } catch (IOException e) {
-                    System.out.printf("Failed to load %s\n", file.getName());
+                    // System.out.printf("Failed to load %s\n", file.getName());
                     e.printStackTrace();
                 }
             }

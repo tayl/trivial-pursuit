@@ -92,6 +92,8 @@ public class TrivialPursuitGUI extends JFrame {
         private int valid_text_buffer_start;
         // the active game
         private Game game;
+        // for testing, if true starts first player with all wedges
+        private final boolean quick_game = true;
         // players in the active game
         private Player[] players;
         // placeholder image object, not used for any one thing
@@ -114,13 +116,13 @@ public class TrivialPursuitGUI extends JFrame {
                 // close it when we're done
                 in.close();
             } catch (IOException e) {
-                System.out.println("Couldn't open PositionMap.txt");
+                // System.out.println("Couldn't open PositionMap.txt");
             }
 
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    System.out.println("Mouse pressed at " + e.getX() + ", " + e.getY());
+                    // System.out.println("Mouse pressed at " + e.getX() + ", " + e.getY());
 
                     if (playing && game.isAwaitingRoll()) {
                         image = graphicAssets.getImage("dice_Drawing.png");
@@ -192,42 +194,42 @@ public class TrivialPursuitGUI extends JFrame {
                         image = graphicAssets.getImage("baby_Shia.png");
                         if (boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2 * 4, getHeight() / 2 - image.getHeight(null) / 2, image, e)) {
                             players[current_player_setup].setGamePiece(0);
-                            System.out.println("Player " + current_player_setup + " given piece 0");
+                            // System.out.println("Player " + current_player_setup + " given piece 0");
                             current_player_setup++;
                             fading = true;
                         }
 
                         if (boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, image, e)) {
                             players[current_player_setup].setGamePiece(1);
-                            System.out.println("Player " + current_player_setup + " given piece 1");
+                            // System.out.println("Player " + current_player_setup + " given piece 1");
                             current_player_setup++;
                             fading = true;
                         }
 
                         if (boundsContainCoords(getWidth() / 2 + image.getWidth(null) / 2 * 2, getHeight() / 2 - image.getHeight(null) / 2, image, e)) {
                             players[current_player_setup].setGamePiece(2);
-                            System.out.println("Player " + current_player_setup + " given piece 2");
+                            // System.out.println("Player " + current_player_setup + " given piece 2");
                             current_player_setup++;
                             fading = true;
                         }
 
                         if (boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2 * 4, getHeight() / 2 + image.getHeight(null) / 2 * 2, image, e)) {
                             players[current_player_setup].setGamePiece(3);
-                            System.out.println("Player " + current_player_setup + " given piece 3");
+                            // System.out.println("Player " + current_player_setup + " given piece 3");
                             current_player_setup++;
                             fading = true;
                         }
 
                         if (boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 + image.getHeight(null) / 2 * 2, image, e)) {
                             players[current_player_setup].setGamePiece(4);
-                            System.out.println("Player " + current_player_setup + " given piece 4");
+                            // System.out.println("Player " + current_player_setup + " given piece 4");
                             current_player_setup++;
                             fading = true;
                         }
 
                         if (boundsContainCoords(getWidth() / 2 + image.getWidth(null) / 2 * 2, getHeight() / 2 + image.getHeight(null) / 2 * 2, image, e)) {
                             players[current_player_setup].setGamePiece(5);
-                            System.out.println("Player " + current_player_setup + " given piece 5");
+                            // System.out.println("Player " + current_player_setup + " given piece 5");
                             current_player_setup++;
                             fading = true;
                         }
@@ -372,14 +374,14 @@ public class TrivialPursuitGUI extends JFrame {
                         players[current_player_setup] = new Player(getBufferLastString());
                         players[current_player_setup].setHuman(true);
                         valid_text_buffer_start = valid_text_buffer_end;
-                        System.out.println("Set player " + current_player_setup + " name to " + players[current_player_setup].getPlayerName());
+                        // System.out.println("Set player " + current_player_setup + " name to " + players[current_player_setup].getPlayerName());
                     }
 
                     // capture text when name dialog appears and store to the buffer
                     // accept on enter or mouse click
                     if (name_entry_menu && ((e.getKeyChar() >= 'a' && e.getKeyChar() <= 'z') || ((e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) || e.getKeyChar() == ' ' || e.getKeyChar() == '!' || e.getKeyChar() == 10)) {
                         valid_text_buffer[valid_text_buffer_end++ % valid_text_buffer.length] = e.getKeyChar();
-                        System.out.println(getBufferLastString());
+                        // System.out.println(getBufferLastString());
                     }
 
                     super.keyPressed(e);
@@ -462,9 +464,20 @@ public class TrivialPursuitGUI extends JFrame {
                 game_piece_menu = false;
                 name_entry_menu = false;
                 // setup complete, start the game
-                System.out.println("Setup complete, start the game");
+                // System.out.println("Setup complete, start the game");
                 try {
                     game = new Game(players);
+
+
+                    // gives the first player all the wedges so they can quickly
+                    // get to the final question and end the game;
+                    if (quick_game) {
+                        for (Category cat : Category.values()) {
+                            players[0].setWedge(cat);
+                        }
+                    }
+
+
                     new Thread(game).start();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -565,7 +578,7 @@ public class TrivialPursuitGUI extends JFrame {
 
             if (1 - number_between_0_and_1_and_then_0 < .01) {
                 transition = true;
-                System.out.println("DARK SCREEN");
+                // System.out.println("DARK SCREEN");
             } else {
                 transition = false;
             }

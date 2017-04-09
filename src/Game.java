@@ -122,41 +122,6 @@ public class Game implements Runnable {
         return players;
     }
 
-    // Colton:
-    // This for-loop triple threat monstrosity is one way to solve the
-    // "who goes first" RNG requirement without worrying about duplicates
-    private void setPlayersTurnOrder2(Player[] players) {
-
-        ArrayList<Integer> turns = new ArrayList<>(numPlayers);
-
-        for (int i = 0; i < this.numPlayers; i++)
-            turns.add(i);
-
-        // it's random?
-        Collections.shuffle(turns);
-
-        // Dish out the shuffled turn numbers
-        for (int i = 0; i < numPlayers; i++)
-            players[i].setGamePiece(turns.get(i));
-
-        // rearrange the players array to be in turn order instead
-        // of creation order. That way we can easily loop-through
-        // turn-based play.
-        for (int i = 0; i < numPlayers; i++) {
-
-            if (players[i].getGamePiece() != i) {
-
-                Player temp = players[i];
-                players[i] = players[players[i].getGamePiece()];
-                players[temp.getGamePiece()] = temp;
-
-            }
-        }
-    }
-
-    // This achieves the same result. Rearranging of the players array to match turn order didn't actually do that in
-    // the previous method, and even if it did, getGamePiece() would return the index, which we have inherently by the
-    // nature of an array. Because of this, I left that out.
     private void setPlayersTurnOrder(Player[] players) {
         for (int i = 0; i < players.length; i++) {
             int rand = (int) (Math.random() * players.length);
@@ -177,13 +142,13 @@ public class Game implements Runnable {
             for (int i = 0; i < 20; i++) {
                 Card tempCard = cardDeck.drawRandomCard(c);
                 int num = 1;
-                System.out.println(tempCard.getQuestion());
-                System.out.println(num++ + ": " + tempCard.getChoices()[0]);
-                System.out.println(num++ + ": " + tempCard.getChoices()[1]);
-                System.out.println(num++ + ": " + tempCard.getChoices()[2]);
-                System.out.println(num++ + ": " + tempCard.getChoices()[3]);
-                System.out.println(tempCard.getCorrectAnsIndex() + ": " + tempCard.getCorrectAns());
-                System.out.println();
+                // System.out.println(tempCard.getQuestion());
+                // System.out.println(num++ + ": " + tempCard.getChoices()[0]);
+                // System.out.println(num++ + ": " + tempCard.getChoices()[1]);
+                // System.out.println(num++ + ": " + tempCard.getChoices()[2]);
+                // System.out.println(num++ + ": " + tempCard.getChoices()[3]);
+                // System.out.println(tempCard.getCorrectAnsIndex() + ": " + tempCard.getCorrectAns());
+                // System.out.println();
             }
         }
 
@@ -225,7 +190,7 @@ public class Game implements Runnable {
     // Daniel:
     // runs through a single turn for a single player
     private boolean playTurn(Player player) throws InterruptedException {
-        System.out.println(player.getPlayerName() + ", it's your turn!");
+        // System.out.println(player.getPlayerName() + ", it's your turn!");
 
         setAwaitingRoll(true);
 
@@ -235,13 +200,13 @@ public class Game implements Runnable {
 
         rollResult = Die.rollThatSucker();
 
-        System.out.println("You rolled a " + rollResult + ".");
+        // System.out.println("You rolled a " + rollResult + ".");
 
         //move the player that number of spaces
         for (int i = 0; i < rollResult; i++) {
             move(player);
         }
-        System.out.println("You're now on space " + player.getPosition());
+        // System.out.println("You're now on space " + player.getPosition());
 
         // then ask the player their question
         Category temp = questionTime(player);
@@ -381,9 +346,9 @@ public class Game implements Runnable {
                 return null;
         }
         //give the player the option to answer or stump
-        System.out.println("Your question is:");
-        System.out.println(card.getQuestion());
-        System.out.println("Do you want to answer the question, or try and stump your opponents? (Enter 1 to answer or 2 to stump)");
+        // System.out.println("Your question is:");
+        // System.out.println(card.getQuestion());
+        // System.out.println("Do you want to answer the question, or try and stump your opponents? (Enter 1 to answer or 2 to stump)");
 
         this.card = card;
         currentPlayer = player;
@@ -408,11 +373,11 @@ public class Game implements Runnable {
         }
 
         if (stumpChoice == 1) {
-            System.out.println("Here are your choices. Enter the number for your selection:");
+            // System.out.println("Here are your choices. Enter the number for your selection:");
             int i = 1;
             //give them their choices
             for (String s : card.getChoices())
-                System.out.println(i++ + ". " + s);
+                // System.out.println(i++ + ". " + s);
 
             // get their response. if its correct, move them to the proper space
             // and return the category of the answered question (waaaay at the
@@ -430,7 +395,7 @@ public class Game implements Runnable {
                 answerChoice = simpleAI(2);
             }
             if (answerChoice == card.getCorrectAnsIndex()) {
-                System.out.println("Correct answer");
+                // System.out.println("Correct answer");
 
                 lastAnswer = true;
                 switch (card.getCategory()) {
@@ -457,13 +422,13 @@ public class Game implements Runnable {
                 }
             } else {
                 lastAnswer = false;
-                System.out.println("Incorrect answer");
+                // System.out.println("Incorrect answer");
                 return null;
             }
         }
         // if the player chooses to stump...
         else {
-            System.out.println(player.getPlayerName() + " has chosen to stump their opponents! Get ready everyone...");
+            // System.out.println(player.getPlayerName() + " has chosen to stump their opponents! Get ready everyone...");
             //frequency array for stump choices
             int[] temp = new int[card.getChoices().length];
 
@@ -473,10 +438,10 @@ public class Game implements Runnable {
                 if (p != player) {
                     int i = 1;
                     // ask them the question...
-                    System.out.println(p.getPlayerName() + " enter the number of your selected choice.");
-                    System.out.println(card.getQuestion());
+                    // System.out.println(p.getPlayerName() + " enter the number of your selected choice.");
+                    // System.out.println(card.getQuestion());
                     for (String s : card.getChoices()) {
-                        System.out.println(i++ + ". " + s);
+                        // System.out.println(i++ + ". " + s);
                     }
 
                     currentPlayer = p;
@@ -498,7 +463,7 @@ public class Game implements Runnable {
             // if the council's answer is correct...
             if (decideChoice(temp) == card.getCorrectAnsIndex()) {
                 // player stumped
-                System.out.println("Uh-oh, your opponents managed to stump you! They all moved forward one space and get your wedge.");
+                // System.out.println("Uh-oh, your opponents managed to stump you! They all moved forward one space and get your wedge.");
                 lastAnswer = false;
                 for (Player p : players) {
                     if (player != p) {
@@ -513,7 +478,7 @@ public class Game implements Runnable {
             else {
                 // move the stumper to the respective home space for the
                 // question category
-                System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.getCategory() + " wedge goes to you.");
+                // System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.getCategory() + " wedge goes to you.");
                 lastAnswer = true;
                 switch (card.getCategory()) {
                     case SPORTS:
@@ -544,7 +509,7 @@ public class Game implements Runnable {
 
     private boolean finalQuestion(Player player) throws InterruptedException {
         Card card;
-        System.out.println("Since you've got all your wedges, its time to answer the FINAL QUESTION:");
+        // System.out.println("Since you've got all your wedges, its time to answer the FINAL QUESTION:");
 
         switch (SPACE_CATEGORIES[player.getPosition()]) {
             case 1:
@@ -566,12 +531,12 @@ public class Game implements Runnable {
                 card = cardDeck.drawRandomCard(Category.ARTS);
                 break;
             default:
-                System.out.println("Uh oh, you didn't land on a question space :(. Better luck next time...");
+                // System.out.println("Uh oh, you didn't land on a question space :(. Better luck next time...");
                 return false;
         }
 
-        System.out.println("Your question is:");
-        System.out.println(card.getQuestion());
+        // System.out.println("Your question is:");
+        // System.out.println(card.getQuestion());
 
         currentPlayer = player;
         this.card = card;
@@ -582,10 +547,10 @@ public class Game implements Runnable {
                 Thread.sleep(50L);
             }
         }
-        System.out.println("Please enter the number corresponding to your response.");
+        // System.out.println("Please enter the number corresponding to your response.");
         int i = 0;
         for (String s : card.getChoices()) {
-            System.out.println(i++ + ". " + s);
+            // System.out.println(i++ + ". " + s);
         }
 
 
@@ -601,11 +566,11 @@ public class Game implements Runnable {
 
         if (answerChoice == card.getCorrectAnsIndex()) {
             lastAnswer = true;
-            System.out.println("Wowie!!! You won :O");
+            // System.out.println("Wowie!!! You won :O");
             return true;
         } else {
             lastAnswer = false;
-            System.out.println("Oh gosh, that one was a fail whale. Better luck next time :(");
+            // System.out.println("Oh gosh, that one was a fail whale. Better luck next time :(");
             return false;
         }
     }
@@ -669,7 +634,7 @@ public class Game implements Runnable {
             default:
                 break;
         }
-        System.out.println("Uh oh, something's gone wrong with the AI.");
+        // System.out.println("Uh oh, something's gone wrong with the AI.");
         return -1;
     }
 

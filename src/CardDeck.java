@@ -32,7 +32,7 @@ public class CardDeck {
             this.readInQuestions(Category.SCIENCE, "questions/sci-questions.txt");
             this.readInQuestions(Category.SPORTS, "questions/sports-questions.txt");
         } catch (IOException e) {
-            System.out.println("Error reading in questions and answers from text files");
+            // System.out.println("Error reading in questions and answers from text files");
         }
     }
 
@@ -65,7 +65,10 @@ public class CardDeck {
             // in the Card's choices array;
             card.setCorrectAnsIndex(0);
 
-            card.shuffleAnswers();
+            // For testing purposes we'll just set the first choice to be the
+            // correct answer for every question. Uncomment this method call
+            // to properly shuffle answers.
+            //card.shuffleAnswers();
 
             temp.add(card);
 
