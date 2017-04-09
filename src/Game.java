@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,42 +34,16 @@ public class Game implements Runnable {
     private final Player[] players;
     // the deck of avaliable cards
     private final CardDeck cardDeck;
+
     private boolean awaitingStumpChoice;
-
-    private boolean rollTheDie;
-    /*
-    // this is just a test drive. I'm assuming we'll get player array from
-    // the GUI class
-    public static void main(String[] args) throws IOException {
-        Player[] testPlayers = new Player[3];
-
-        for (int i = 0; i < testPlayers.length; i++) {
-            testPlayers[i] = new Player("Shia LaBeouf" + Integer.toString(i));
-        }
-        testPlayers[0].human = true;
-        testPlayers[0].setWedge(Category.ARTS);
-        testPlayers[0].setWedge(Category.SCIENCE);
-        testPlayers[0].setWedge(Category.SPORTS);
-        testPlayers[0].setWedge(Category.PLACES);
-        testPlayers[0].setWedge(Category.EVENTS);
-        testPlayers[0].setWedge(Category.ENTERTAINMENT);
-        testPlayers[1].human = false;
-        testPlayers[2].human = false;
-
-        Game game = new Game(testPlayers);
-        for (Player player : testPlayers) {
-            System.out.println(player.getPlayerName() + " " + player.getGamePiece());
-        }
-
-        Player winner = game.playGame();
-
-        System.out.println(winner.playerName + " won the game!");
-    }
-*/
     private int stumpChoice;
+
     private boolean awaitingAnswerChoice;
     private int answerChoice;
-    private int dieRoll;
+
+    private boolean awaitingRoll;
+    private long isRolling;
+    private int rollResult;
 
     // Constructor for game
     // takes in the array of players
@@ -80,28 +53,33 @@ public class Game implements Runnable {
         this.numPlayers = players.length;
 
         this.cardDeck = new CardDeck();
-        this.rollTheDie = false;
 
         // puts players in the players array based on turn order
         setPlayersTurnOrder(players);
     }
 
-    public boolean isRollTheDie() {
-        return rollTheDie;
+    public boolean isAwaitingRoll() {
+        return awaitingRoll;
     }
 
-    public void setRollTheDie(boolean rollTheDie) {
-        this.rollTheDie = rollTheDie;
+    public void setAwaitingRoll(boolean awaiting) {
+        awaitingRoll = awaiting;
     }
 
-    public int getDieRoll() {
-        return dieRoll;
+    public boolean isRolling() {
+        return System.nanoTime() - isRolling < 3000000000L;
     }
 
-    public void setDieRoll(int dieRoll) {
-        this.dieRoll = dieRoll;
+    public boolean hasRolled() {
+        return System.nanoTime() - isRolling > 3000000000L && System.nanoTime() - isRolling < 6000000000L;
+    }
 
-        this.rollTheDie = false;
+    public void setRolling() {
+        isRolling = System.nanoTime();
+    }
+
+    public int getRollResult() {
+        return rollResult;
     }
 
     public Player[] getPlayers() {
@@ -182,26 +160,18 @@ public class Game implements Runnable {
     // Daniel:
     // runs through a single turn for a single player
     private boolean playTurn(Player player) throws InterruptedException {
-        Image image;
         System.out.println(player.playerName + ", it's your turn!");
 
-        //player rolls a die to decide movement spaces
-        if (player.human) {
-            rollTheDie = true;
-            while (!Die.rolled) {
-                Thread.sleep(50L);
-            }
-            dieRoll = Die.rollThatSucker();
-            while (rollTheDie)
-                Thread.sleep(50L);
-        } else
-            dieRoll = Die.rollThatSucker();
+        setAwaitingRoll(true);
 
-        System.out.println("You rolled a " + dieRoll + ".");
+        rollResult = Die.rollThatSucker();
+
+        System.out.println("You rolled a " + rollResult + ".");
 
         //move the player that number of spaces
-        for (int i = 0; i < dieRoll; i++)
+        for (int i = 0; i < rollResult; i++) {
             move(player);
+        }
         System.out.println("You're now on space " + player.position);
 
         // then ask the player their question
@@ -215,8 +185,9 @@ public class Game implements Runnable {
         // Acording to the flow chart on the FRD, they want us to always
         // ask a pointless question before going to the final question, so
         // this does that.
-        if (checkWedges(player))
+        if (checkWedges(player)) {
             return finalQuestion(player);
+        }
         // otherwise, the game continues
         return false;
     }

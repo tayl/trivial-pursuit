@@ -265,10 +265,17 @@ public class TrivialPursuitGUI extends JFrame {
                 @Override
                 public void keyPressed(KeyEvent e) {
 
-                    if (playing && game.isRollTheDie()) {
+                    if (playing && game.isAwaitingRoll()) {
                         if (e.getKeyChar() == ' ') {
-                            Die.rolled = true;
+                            game.setAwaitingRoll(false);
+                            game.setRolling();
                         }
+                        return;
+                    }
+
+                    // ignore other keystrokes while rolling
+                    if (playing && game.isRolling()) {
+                        return;
                     }
 
                     //TODO
@@ -351,13 +358,27 @@ public class TrivialPursuitGUI extends JFrame {
             }
 
             // draws the player cards and game board
-            if (playing) {
+            if (playing && game != null) {
                 drawGameBoard(g);
                 drawPlayerCards(g);
-                drawGameState(g);
+                drawPlayerGamePieces(g);
 
-                if (game != null) {
-                    drawDie(g);
+                if (game.isAwaitingRoll()) {
+                    drawShadowOverlay(g);
+                    drawRollTheDice(g);
+                    drawDice(g);
+                }
+
+                if (game.isRolling()) {
+                    drawShadowOverlay(g);
+                    drawRollTheDice(g);
+                    drawAnimatedDice(g);
+                }
+
+                if (game.hasRolled()) {
+                    drawShadowOverlay(g);
+                    drawDiceRollResult(g);
+                    drawDice(g);
                 }
             }
 
@@ -513,31 +534,26 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 2 * 2, getHeight() / 2 + image.getHeight(null) / 2 * 2, null);
         }
 
-        // pauses for seconds number of seconds
-        private void pause(double seconds) {
-            timeVar = (double) System.nanoTime() / 1000000000.0;
-            while (timeVar + seconds > (double) System.nanoTime() / 1000000000.0) {
-            }
+        private void drawRollTheDice(Graphics2D g) {
+            image = graphicAssets.getImage("roll_Dice.png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
         }
 
-        private void drawDie(Graphics2D g) {
-            if (!Die.rolled) {
-                image = graphicAssets.getImage("roll_Dice.png");
-                g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
-                timeVar = (double) System.nanoTime() / 1000000000.0;
-                return;
-            }
-            if (game.isRollTheDie()) {
-                image = graphicAssets.getImage("dice_Drawing.png");
-                g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
-                if ((double) System.nanoTime() / 1000000000.0 >= timeVar + 1.2) {
-                    game.setRollTheDie(false);
-                    timeVar = (double) System.nanoTime() / 1000000000.0;
-                }
-            } else if ((double) System.nanoTime() / 1000000000.0 <= timeVar + 2.0) {
-                image = graphicAssets.getImage("roll_Dice_" + game.getDieRoll() + ".png");
-                g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
-            }
+        private void drawDice(Graphics2D g) {
+            image = graphicAssets.getImage("dice_Drawing.png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
+        }
+
+        private void drawAnimatedDice(Graphics2D g) {
+            image = graphicAssets.getImage("dice_Drawing.png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100), null);
+            g.setColor(Color.white);
+            g.drawString("ROLLING ANIMATION", getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100));
+        }
+
+        private void drawDiceRollResult(Graphics2D g) {
+            image = graphicAssets.getImage("roll_Dice_" + game.getRollResult() + ".png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
         }
 
         /**
@@ -616,18 +632,11 @@ public class TrivialPursuitGUI extends JFrame {
             g.drawImage(image, 0, (getHeight() - image.getHeight(null)) / 2, this);
         }
 
-        private void drawGameState(Graphics2D g) {
+        private void drawPlayerGamePieces(Graphics2D g) {
             Point point;
-            if (game != null) {
-                for (Player p : game.getPlayers()) {
-                    point = positionMap[p.position];
-                    g.drawImage(p.playerImage, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
-                }
-            } else {
-                for (Player p : players) {
-                    point = positionMap[p.position];
-                    g.drawImage(p.playerImage, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
-                }
+            for (Player p : game.getPlayers()) {
+                point = positionMap[p.position];
+                g.drawImage(p.playerImage, graphicAssets.scaledCoordinate((int) point.getX() - 33), graphicAssets.scaledCoordinate((int) point.getY() - 10), null);
             }
         }
 
