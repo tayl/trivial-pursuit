@@ -38,6 +38,7 @@ public class Game implements Runnable {
     private Player currentPlayer;
     private boolean lastAnswer;
 
+    private boolean awaitingQuestionPreveiw;
     private boolean awaitingStumpChoice;
     private int stumpChoice;
 
@@ -49,6 +50,7 @@ public class Game implements Runnable {
     private int rollResult;
 
     private long isWaiting;
+    private boolean awaitingEndScreen;
 
     // Constructor for game
     // takes in the array of players
@@ -56,6 +58,7 @@ public class Game implements Runnable {
 
         this.players = players;
         this.numPlayers = players.length;
+        this.awaitingEndScreen = false;
 
         this.cardDeck = new CardDeck();
 
@@ -73,6 +76,14 @@ public class Game implements Runnable {
 
     public boolean getLastAnswer() {
         return lastAnswer;
+    }
+    
+    public boolean isAwaitingQuestionPreveiw() {
+        return awaitingQuestionPreveiw;
+    }
+
+    public void setAwaitingQuestionPreveiw(boolean awaitingQuestionPreveiw) {
+        this.awaitingQuestionPreveiw = awaitingQuestionPreveiw;
     }
 
     public boolean isWaiting() {
@@ -170,7 +181,13 @@ public class Game implements Runnable {
                     if (playTurn(p)) {
                         // the game is over
                         gameOver = true;
+                        awaitingEndScreen = true;
                         winner = p;
+                        
+                        while(awaitingEndScreen) {
+                            Thread.sleep(50L);
+                        }
+                        
                         break;
                     }
                 } catch (InterruptedException e) {
@@ -180,6 +197,14 @@ public class Game implements Runnable {
         }
         //return the dood who won
         return winner;
+    }
+
+    public boolean isAwaitingEndScreen() {
+        return awaitingEndScreen;
+    }
+
+    public void setAwaitingEndScreen(boolean awaitingEndScreen) {
+        this.awaitingEndScreen = awaitingEndScreen;
     }
 
     // Daniel:
@@ -264,6 +289,10 @@ public class Game implements Runnable {
                         break;
                 }
                 break;
+            // circles around the board
+            case 42:
+                player.setPosition(1);
+                break;
             //decides which space to move to if the player is at the edge of a spoke
             case 47:
             case 52:
@@ -342,6 +371,15 @@ public class Game implements Runnable {
         System.out.println("Do you want to answer the question, or try and stump your opponents? (Enter 1 to answer or 2 to stump)");
 
         this.card = card;
+        currentPlayer = player;
+        
+        if(player.isHuman()) {
+            awaitingQuestionPreveiw = true;
+            
+            while(awaitingQuestionPreveiw) {
+                Thread.sleep(50L);
+            }
+        }
 
         //if the player chooses to answer
         if (player.isHuman()) {
@@ -378,6 +416,7 @@ public class Game implements Runnable {
             }
             if (answerChoice == card.getCorrectAnsIndex()) {
                 System.out.println("Correct answer");
+                
                 lastAnswer = true;
                 switch (card.getCategory()) {
                     case SPORTS:
@@ -518,18 +557,34 @@ public class Game implements Runnable {
 
         System.out.println("Your question is:");
         System.out.println(card.getQuestion());
+        
+        currentPlayer = player;
+        this.card = card;
+        if(player.isHuman()) {
+            awaitingQuestionPreveiw = true;
+            
+            while(awaitingQuestionPreveiw) {
+                Thread.sleep(50L);
+            }
+        }
         System.out.println("Please enter the number corresponding to your response.");
         int i = 0;
         for (String s : card.getChoices()) {
             System.out.println(i++ + ". " + s);
         }
 
-        currentPlayer = player;
+        
+        if(player.isHuman())
+        {
+            awaitingAnswerChoice = true;
 
-        awaitingAnswerChoice = true;
-
-        while (awaitingAnswerChoice) {
+            while (awaitingAnswerChoice) {
             Thread.sleep(50L);
+            }
+        }
+        else
+        {
+            answerChoice = simpleAI(2);
         }
 
         if (answerChoice == card.getCorrectAnsIndex()) {

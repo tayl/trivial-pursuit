@@ -161,6 +161,16 @@ public class TrivialPursuitGUI extends JFrame {
 
                         game.setWaiting(5);
                     }
+                    
+                    if(playing && game.isAwaitingQuestionPreveiw()) {
+                        image = graphicAssets.getImage("btn_cont.png");
+                        int yOffset = graphicAssets.scaledCoordinate(100);
+                        if(boundsContainCoords(getWidth() / 2 - image.getWidth(null) / 2, yOffset + (getHeight() / 2 - image.getHeight(null) / 2), image, e)) {
+                            game.setAwaitingQuestionPreveiw(false);
+                        }
+                        
+                        //game.setWaiting(5);
+                    }
 
                     if (playing && game.isAwaitingStumpChoice()) {
                         image = graphicAssets.getImage("yes_Button.png");
@@ -419,6 +429,10 @@ public class TrivialPursuitGUI extends JFrame {
 //                    }
                     return;
                 }
+                
+                if(game.isAwaitingQuestionPreveiw()) {
+                    drawQuestionPreveiw(g);
+                }
 
                 if (game.isAwaitingStumpChoice()) {
                     //drawShadowOverlay(g);
@@ -433,6 +447,10 @@ public class TrivialPursuitGUI extends JFrame {
                     //drawShadowOverlay(g);
                     drawRollTheDice(g);
                     drawDice(g);
+                }
+                
+                if (game.isAwaitingEndScreen()) {
+                    drawEndScreen(g);
                 }
             }
 
@@ -610,6 +628,48 @@ public class TrivialPursuitGUI extends JFrame {
 
         private void drawDiceRollResult(Graphics2D g) {
             image = graphicAssets.getImage("roll_Dice_" + game.getRollResult() + ".png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+        }
+        
+        private void drawQuestionPreveiw(Graphics2D g) {
+            Card current_card = game.getCard();
+
+            switch (current_card.getCategory()) {
+                case ARTS:
+                    image = graphicAssets.getImage("ARTS_Card.png");
+                    break;
+                case EVENTS:
+                    image = graphicAssets.getImage("EVENTS_Card.png");
+                    break;
+                case PLACES:
+                    image = graphicAssets.getImage("PLACES_Card.png");
+                    break;
+                case SPORTS:
+                    image = graphicAssets.getImage("SPORTS_Card.png");
+                    break;
+                case SCIENCE:
+                    image = graphicAssets.getImage("SCIENCE_Card.png");
+                    break;
+                case ENTERTAINMENT:
+                    image = graphicAssets.getImage("ENTERTAINMENT_Card.png");
+                    break;
+            }
+
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+            int x_coord = getWidth() / 2 - image.getWidth(null) / 2 + graphicAssets.scaledCoordinate(100);
+            int y_coord = getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100);
+            int y_offset = 50;
+            g.drawString("Question for " + game.getCurrentPlayer().getPlayerName(), x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset));
+            y_offset += 40;
+            g.drawString(current_card.getQuestion(), x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset));
+            
+            image = graphicAssets.getImage("btn_cont.png");
+            y_offset = graphicAssets.scaledCoordinate(100);
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, y_offset + (getHeight() / 2 - image.getHeight(null) / 2), null);
+        }
+        
+        private void drawEndScreen(Graphics2D g) {
+            image = graphicAssets.getImage("win_Screen.png");
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
         }
 
@@ -916,7 +976,7 @@ public class TrivialPursuitGUI extends JFrame {
                 boolean[] wedges = player.getWedges();
 
                 if (wedges[0]) {
-                    image = graphicAssets.getImage("yellow_Wedge.png");
+                    image = graphicAssets.getImage("purple_Wedge.png");
                     g.drawImage(image, x + graphicAssets.scaledCoordinate(148), y + graphicAssets.scaledCoordinate(53), null);
                 }
 
@@ -926,7 +986,7 @@ public class TrivialPursuitGUI extends JFrame {
                 }
 
                 if (wedges[2]) {
-                    image = graphicAssets.getImage("green_Wedge.png");
+                    image = graphicAssets.getImage("yellow_Wedge.png");
                     g.drawImage(image, x + graphicAssets.scaledCoordinate(186), y + graphicAssets.scaledCoordinate(53), null);
                 }
 
@@ -936,12 +996,12 @@ public class TrivialPursuitGUI extends JFrame {
                 }
 
                 if (wedges[4]) {
-                    image = graphicAssets.getImage("orange_Wedge.png");
+                    image = graphicAssets.getImage("green_Wedge.png");
                     g.drawImage(image, x + graphicAssets.scaledCoordinate(224), y + graphicAssets.scaledCoordinate(53), null);
                 }
 
                 if (wedges[5]) {
-                    image = graphicAssets.getImage("purple_Wedge.png");
+                    image = graphicAssets.getImage("orange_Wedge.png");
                     g.drawImage(image, x + graphicAssets.scaledCoordinate(243), y + graphicAssets.scaledCoordinate(53), null);
                 }
 
