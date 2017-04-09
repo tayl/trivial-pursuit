@@ -363,20 +363,29 @@ public class TrivialPursuitGUI extends JFrame {
                 drawPlayerCards(g);
                 drawPlayerGamePieces(g);
 
+                if (game.isAwaitingStumpChoice()) {
+                    //drawShadowOverlay(g);
+                    drawTrumpSelectionMenu(g);
+                }
+
+                if (game.isAwaitingAnswerChoice()) {
+                    drawAnswerSelectionMenu(g);
+                }
+
                 if (game.isAwaitingRoll()) {
-                    drawShadowOverlay(g);
+                    //drawShadowOverlay(g);
                     drawRollTheDice(g);
                     drawDice(g);
                 }
 
                 if (game.isRolling()) {
-                    drawShadowOverlay(g);
+                    //drawShadowOverlay(g);
                     drawRollTheDice(g);
                     drawAnimatedDice(g);
                 }
 
                 if (game.hasRolled()) {
-                    drawShadowOverlay(g);
+                    //drawShadowOverlay(g);
                     drawDiceRollResult(g);
                     drawDice(g);
                 }
@@ -554,6 +563,61 @@ public class TrivialPursuitGUI extends JFrame {
         private void drawDiceRollResult(Graphics2D g) {
             image = graphicAssets.getImage("roll_Dice_" + game.getRollResult() + ".png");
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+        }
+
+        private void drawTrumpSelectionMenu(Graphics2D g) {
+            image = graphicAssets.getImage("stump_Option.png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+
+            drawYesNoOptions(g);
+        }
+
+        private void drawYesNoOptions(Graphics2D g) {
+            image = graphicAssets.getImage("yes_Button.png");
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2 * 3, getHeight() / 2 - image.getHeight(null) / 2, null);
+            image = graphicAssets.getImage("no_Button.png");
+            g.drawImage(image, getWidth() / 2 + image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+        }
+
+        private void drawAnswerSelectionMenu(Graphics2D g) {
+            Card current_card = game.getCard();
+
+            switch (current_card.getCategory()) {
+                case ARTS:
+                    image = graphicAssets.getImage("ARTS_Card.png");
+                    break;
+                case EVENTS:
+                    image = graphicAssets.getImage("EVENTS_Card.png");
+                    break;
+                case PLACES:
+                    image = graphicAssets.getImage("PLACES_Card.png");
+                    break;
+                case SPORTS:
+                    image = graphicAssets.getImage("SPORTS_Card.png");
+                    break;
+                case SCIENCE:
+                    image = graphicAssets.getImage("SCIENCE_Card.png");
+                    break;
+                case ENTERTAINMENT:
+                    image = graphicAssets.getImage("ENTERTAINMENT_Card.png");
+                    break;
+            }
+
+            g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
+
+            int y_offset = 50;
+            g.drawString(current_card.getQuestion(), getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            y_offset += 40;
+
+            String[] answerChoices = current_card.getChoices();
+
+            g.drawString(answerChoices[0], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            y_offset += 40;
+            g.drawString(answerChoices[1], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            y_offset += 40;
+            g.drawString(answerChoices[2], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
+            y_offset += 40;
+            g.drawString(answerChoices[3], getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2 + y_offset);
         }
 
         /**

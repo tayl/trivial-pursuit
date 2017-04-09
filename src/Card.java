@@ -4,10 +4,10 @@
 
 public class Card {
 
-    Category category;
-    String question;
-    String[] choices;
-    int correctAnsIndex;
+    private Category category;
+    private String question;
+    private String[] choices;
+    private int correctAnsIndex;
 
     public Card(Category category) {
         this.category = category;
@@ -51,5 +51,9 @@ public class Card {
             choices[correctAnsIndex] = randomQuestion;
             correctAnsIndex = randomIndex;
         }
+    }
+
+    public Category getCategory() {
+        return category;
     }
 }

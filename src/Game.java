@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 /**
  * Created by Colton on 4/1/2017.
@@ -35,6 +34,8 @@ public class Game implements Runnable {
     // the deck of avaliable cards
     private final CardDeck cardDeck;
 
+    private Card card;
+
     private boolean awaitingStumpChoice;
     private int stumpChoice;
 
@@ -56,6 +57,10 @@ public class Game implements Runnable {
 
         // puts players in the players array based on turn order
         setPlayersTurnOrder(players);
+    }
+
+    public Card getCard() {
+        return card;
     }
 
     public boolean isAwaitingRoll() {
@@ -309,13 +314,10 @@ public class Game implements Runnable {
         }
         //give the player the option to answer or stump
         System.out.println("Your question is:");
-        System.out.println(card.question);
+        System.out.println(card.getQuestion());
         System.out.println("Do you want to answer the question, or try and stump your opponents? (Enter 1 to answer or 2 to stump)");
 
-        // the user input was just for testing, front end should replace text input
-        // with screen prompts and buttons
-        Scanner userInput = new Scanner(System.in);
-
+        this.card = card;
 
         //TODO
 
@@ -334,7 +336,7 @@ public class Game implements Runnable {
             System.out.println("Here are your choices. Enter the number for your selection:");
             int i = 1;
             //give them their choices
-            for (String s : card.choices)
+            for (String s : card.getChoices())
                 System.out.println(i++ + ". " + s);
 
             // get their response. if its correct, move them to the proper space
@@ -349,9 +351,9 @@ public class Game implements Runnable {
             } else {
                 answerChoice = simpleAI(2);
             }
-            if (answerChoice == card.correctAnsIndex) {
+            if (answerChoice == card.getCorrectAnsIndex()) {
                 System.out.println("Correct answer");
-                switch (card.category) {
+                switch (card.getCategory()) {
                     case SPORTS:
                         player.position = 29;
                         break;
@@ -382,7 +384,7 @@ public class Game implements Runnable {
         else {
             System.out.println(player.playerName + " has chosen to stump their opponents! Get ready everyone...");
             //frequency array for stump choices
-            int[] temp = new int[card.choices.length];
+            int[] temp = new int[card.getChoices().length];
 
             // for each player...
             for (Player p : players) {
@@ -391,8 +393,8 @@ public class Game implements Runnable {
                     int i = 1;
                     // ask them the question...
                     System.out.println(p.playerName + " enter the number of your selected choice.");
-                    System.out.println(card.question);
-                    for (String s : card.choices) {
+                    System.out.println(card.getQuestion());
+                    for (String s : card.getChoices()) {
                         System.out.println(i++ + ". " + s);
                     }
 
@@ -411,13 +413,13 @@ public class Game implements Runnable {
                 }
             }
             // if the council's answer is correct...
-            if (decideChoice(temp) == card.correctAnsIndex) {
+            if (decideChoice(temp) == card.getCorrectAnsIndex()) {
                 // player stumped
                 System.out.println("Uh-oh, your opponents managed to stump you! They all moved forward one space and get your wedge.");
                 for (Player p : players) {
                     if (player != p) {
                         move(p);
-                        p.setWedge(card.category);
+                        p.setWedge(card.getCategory());
                     }
                 }
                 // no wedge for you.
@@ -427,8 +429,8 @@ public class Game implements Runnable {
             else {
                 // move the stumper to the respective home space for the
                 // question category
-                System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.category + " wedge goes to you.");
-                switch (card.category) {
+                System.out.println("Hooray! Your opponents couldn't answer the question so the " + card.getCategory() + " wedge goes to you.");
+                switch (card.getCategory()) {
                     case SPORTS:
                         player.position = 29;
                         break;
@@ -452,7 +454,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        return card.category;
+        return card.getCategory();
     }
 
     private boolean finalQuestion(Player player) throws InterruptedException {
@@ -484,10 +486,10 @@ public class Game implements Runnable {
         }
 
         System.out.println("Your question is:");
-        System.out.println(card.question);
+        System.out.println(card.getQuestion());
         System.out.println("Please enter the number corresponding to your response.");
         int i = 0;
-        for (String s : card.choices) {
+        for (String s : card.getChoices()) {
             System.out.println(i++ + ". " + s);
         }
 
@@ -498,7 +500,7 @@ public class Game implements Runnable {
             Thread.sleep(50L);
         }
 
-        if (answerChoice == card.correctAnsIndex) {
+        if (answerChoice == card.getCorrectAnsIndex()) {
             System.out.println("Wowie!!! You won :O");
             return true;
         } else {
