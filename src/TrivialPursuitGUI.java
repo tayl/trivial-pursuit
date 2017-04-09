@@ -142,24 +142,27 @@ public class TrivialPursuitGUI extends JFrame {
 
                         if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
                             game.setAnswerChoice(0);
+                            game.setWaiting(5);
                         }
                         y_offset += 60;
 
                         if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
                             game.setAnswerChoice(1);
+                            game.setWaiting(5);
                         }
                         y_offset += 60;
 
                         if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
                             game.setAnswerChoice(2);
+                            game.setWaiting(5);
                         }
                         y_offset += 60;
 
                         if (boundsContainCoords(x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset), image, e)) {
                             game.setAnswerChoice(3);
+                            game.setWaiting(5);
                         }
 
-                        game.setWaiting(5);
                     }
                     
                     if(playing && game.isAwaitingQuestionPreveiw()) {
@@ -659,6 +662,7 @@ public class TrivialPursuitGUI extends JFrame {
             int x_coord = getWidth() / 2 - image.getWidth(null) / 2 + graphicAssets.scaledCoordinate(100);
             int y_coord = getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100);
             int y_offset = 50;
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
             g.drawString("Question for " + game.getCurrentPlayer().getPlayerName(), x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset));
             y_offset += 40;
             g.drawString(current_card.getQuestion(), x_coord, y_coord + graphicAssets.scaledCoordinate(y_offset));
@@ -689,13 +693,13 @@ public class TrivialPursuitGUI extends JFrame {
 
         private void drawSuccess(Graphics2D g) {
             g.setColor(Color.green);
-            g.setFont(new Font("Calibri", Font.BOLD, 50));
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
             g.drawString("Correct!", graphicAssets.scaledCoordinate(900), graphicAssets.scaledCoordinate(540));
         }
 
         private void drawFail(Graphics2D g) {
             g.setColor(Color.red);
-            g.setFont(new Font("Calibri", Font.BOLD, 50));
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
             g.drawString("Incorrect!", graphicAssets.scaledCoordinate(900), graphicAssets.scaledCoordinate(540));
         }
 
@@ -725,6 +729,7 @@ public class TrivialPursuitGUI extends JFrame {
 
             g.drawImage(image, getWidth() / 2 - image.getWidth(null) / 2, getHeight() / 2 - image.getHeight(null) / 2, null);
 
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
             int x_coord = getWidth() / 2 - image.getWidth(null) / 2 + graphicAssets.scaledCoordinate(100);
             int y_coord = getHeight() / 2 - image.getHeight(null) / 2 + graphicAssets.scaledCoordinate(100);
             int y_offset = 50;
@@ -774,7 +779,7 @@ public class TrivialPursuitGUI extends JFrame {
             g.setColor(Color.white);
             g.fill3DRect(getWidth() / 2 - graphicAssets.scaledCoordinate(700) / 2, getHeight() / 2, graphicAssets.scaledCoordinate(700), graphicAssets.scaledCoordinate(100), true);
             g.setColor(Color.black);
-            g.setFont(new Font("Calibri", Font.BOLD, 30));
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
             g.drawString(getBufferLastString(), getWidth() / 2 - graphicAssets.scaledCoordinate(330), getHeight() / 2 + graphicAssets.scaledCoordinate(70));
         }
 
@@ -941,7 +946,7 @@ public class TrivialPursuitGUI extends JFrame {
                 g.drawImage(image, x, y, this);
 
                 // set the font and color
-                g.setFont(new Font("Calibri", Font.BOLD, 16));
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
                 g.setColor(Color.black);
 
                 // draw the players name

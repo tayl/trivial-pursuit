@@ -1,6 +1,6 @@
 The Betrayal of Images is;A painting of a pipe;A sculpture of a pipe;A novel;A sketch by Leonardo Da Vinci;1
 Which famous painter said "I don't do drugs, I am drugs."?;Salvador Dali;Pablo Picasso;Vincent Van Gogh;Jackson Pollock;3
-The ancient Greek statue Ahprodite of Milos, better known as Venus de Milo, is currently on display in what museum?;The Louvre in Paris, France;;;;1
+The ancient Greek statue Ahprodite of Milos, better known as Venus de Milo, is currently on display in what city?;Paris, France;Hamburg, Germany;London, England;New York City, New York;1
 The Starry Night is an oil on canvas painted by which post-impressionist painter?;Vincent van Gogh;Pablo Picasso;Henri Rousseau;Pierre Bonnard;1
 Who painted a late 15th-century mural known as the Last Supper?;Leonardo da Vinci;Raphael;Paolo Uccello;Giotto;1
 Which artist is credited with developing linear perspective?;Brunelleschi;Filippino Lippi;Leonardo da Vinci;Michelangelo;1

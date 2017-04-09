@@ -77,7 +77,7 @@ public class Game implements Runnable {
     public boolean getLastAnswer() {
         return lastAnswer;
     }
-    
+
     public boolean isAwaitingQuestionPreveiw() {
         return awaitingQuestionPreveiw;
     }
@@ -172,6 +172,21 @@ public class Game implements Runnable {
     public Player playGame() throws IOException {
         boolean gameOver = false;
         Player winner = null;
+
+        for (Category c : Category.values()) {
+            for (int i = 0; i < 20; i++) {
+                Card tempCard = cardDeck.drawRandomCard(c);
+                int num = 1;
+                System.out.println(tempCard.getQuestion());
+                System.out.println(num++ + ": " + tempCard.getChoices()[0]);
+                System.out.println(num++ + ": " + tempCard.getChoices()[1]);
+                System.out.println(num++ + ": " + tempCard.getChoices()[2]);
+                System.out.println(num++ + ": " + tempCard.getChoices()[3]);
+                System.out.println(tempCard.getCorrectAnsIndex() + ": " + tempCard.getCorrectAns());
+                System.out.println();
+            }
+        }
+
         // while the game isn't over...
         while (!gameOver) {
             // for each player...
@@ -183,11 +198,11 @@ public class Game implements Runnable {
                         gameOver = true;
                         awaitingEndScreen = true;
                         winner = p;
-                        
-                        while(awaitingEndScreen) {
+
+                        while (awaitingEndScreen) {
                             Thread.sleep(50L);
                         }
-                        
+
                         break;
                     }
                 } catch (InterruptedException e) {
@@ -372,11 +387,11 @@ public class Game implements Runnable {
 
         this.card = card;
         currentPlayer = player;
-        
-        if(player.isHuman()) {
+
+        if (player.isHuman()) {
             awaitingQuestionPreveiw = true;
-            
-            while(awaitingQuestionPreveiw) {
+
+            while (awaitingQuestionPreveiw) {
                 Thread.sleep(50L);
             }
         }
@@ -416,7 +431,7 @@ public class Game implements Runnable {
             }
             if (answerChoice == card.getCorrectAnsIndex()) {
                 System.out.println("Correct answer");
-                
+
                 lastAnswer = true;
                 switch (card.getCategory()) {
                     case SPORTS:
@@ -557,13 +572,13 @@ public class Game implements Runnable {
 
         System.out.println("Your question is:");
         System.out.println(card.getQuestion());
-        
+
         currentPlayer = player;
         this.card = card;
-        if(player.isHuman()) {
+        if (player.isHuman()) {
             awaitingQuestionPreveiw = true;
-            
-            while(awaitingQuestionPreveiw) {
+
+            while (awaitingQuestionPreveiw) {
                 Thread.sleep(50L);
             }
         }
@@ -573,17 +588,14 @@ public class Game implements Runnable {
             System.out.println(i++ + ". " + s);
         }
 
-        
-        if(player.isHuman())
-        {
+
+        if (player.isHuman()) {
             awaitingAnswerChoice = true;
 
             while (awaitingAnswerChoice) {
-            Thread.sleep(50L);
+                Thread.sleep(50L);
             }
-        }
-        else
-        {
+        } else {
             answerChoice = simpleAI(2);
         }
 

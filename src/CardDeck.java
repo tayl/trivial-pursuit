@@ -12,7 +12,7 @@ public class CardDeck {
 
     // The card deck is a hashmap using Categories as keys
     // and a list of Card objects as values.
-    private HashMap<Category, ArrayList<Card>> deck;
+    public HashMap<Category, ArrayList<Card>> deck;
 
     public CardDeck() throws IOException {
         this.deck = new HashMap<>();
